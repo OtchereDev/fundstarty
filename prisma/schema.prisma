@@ -1,0 +1,89 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id           Int         @id @default(autoincrement())
+  name         String
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  Fundraiser   Fundraiser? @relation(fields: [fundraiserId], references: [id])
+  fundraiserId String?
+}
+
+model Fundraiser {
+  id            String           @id @default(uuid())
+  title         String
+  description   String
+  image         String
+  amountRaising Decimal
+  organizer     User             @relation(fields: [userId], references: [id])
+  category      Category[]
+  comments      Comment[]
+  expiryDate    DateTime?
+  investments   FundInvestment[]
+  isDeleted     Boolean?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  categoryId    Int
+  userId        String
+}
+
+model Comment {
+  id           String      @id @default(uuid())
+  message      String
+  sponsor      String
+  Fundraiser   Fundraiser? @relation(fields: [fundraiserId], references: [id])
+  fundraiserId String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+model FundInvestment {
+  id           String      @id @default(uuid())
+  amount       Decimal
+  Fundraiser   Fundraiser? @relation(fields: [fundraiserId], references: [id])
+  fundraiserId String?
+  User         User?       @relation(fields: [userId], references: [id])
+  userId       String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+model User {
+  id           String           @id @default(uuid())
+  email        String           @unique
+  pangeaUserId String?
+  investments  FundInvestment[]
+  Fundraiser   Fundraiser[]
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+}
+
+model Wallet {
+  id          String   @id @default(uuid())
+  cardNumber  String
+  cvv         String
+  cardHolder  String
+  expiryMonth String
+  expiryYear  String
+  isDeleted   Boolean
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Transaction {
+  id        String   @id @default(uuid())
+  transType String
+  amount    Decimal
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

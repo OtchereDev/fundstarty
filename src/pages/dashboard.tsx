@@ -1,0 +1,183 @@
+import { DownwardTrend, UpwardTrending } from '@/components/assets/icons'
+import CardStack from '@/components/dashboard/CardStack'
+import LineChart from '@/components/dashboard/LineChart'
+import Analystics from '@/components/layouts/analytics'
+import { Plus } from 'lucide-react'
+
+export default function Dashbaord() {
+  return (
+    <Analystics>
+      <main className=" flex-1  lg:grid lg:grid-cols-[70%,30%] lg:gap-5">
+        <div className="overflow-y-scroll pt-32 lg:pb-20 lg:pt-10">
+          <h1 className="mb-5 text-2xl font-semibold lg:mb-10 lg:text-3xl">Dashboard</h1>
+          <div className="flex   items-center gap-4">
+            <div className="relative h-[55px] w-[55px] overflow-hidden rounded-full">
+              <img
+                src="https://images.pexels.com/photos/6646975/pexels-photo-6646975.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                alt="banner"
+                className="h-full w-full object-cover"
+              />
+            </div>
+            <div>
+              <p className="text-lg font-bold">Good Morning Oliver Otchere</p>
+              <p className="text-sm text-gray-500">Let&apos;s manage your investments</p>
+            </div>
+          </div>
+
+          <div className="mt-10 flex flex-col gap-6 lg:flex-row">
+            <div className="relative min-h-[100px] flex-1 rounded-xl bg-[#e5f5fa] p-4  lg:min-h-[180px] lg:p-6">
+              <UpwardTrending className="absolute right-6 top-4 w-[70px]" />
+              <p className="inline-block rounded-full bg-white px-3 py-1 text-sm font-semibold text-green-600">
+                +8.8%
+              </p>
+              <h3 className="mt-5 font-semibold">Total revenue</h3>
+              <h2 className="mt-3 text-3xl font-bold">$320,000</h2>
+            </div>
+            <div className="relative min-h-[100px] flex-1 rounded-xl bg-[#ffe2e2] p-4 lg:min-h-[180px] lg:p-6">
+              <DownwardTrend className="absolute right-6 top-4 w-[70px]" />
+              <p className="inline-block rounded-full bg-white px-3 py-1 text-sm font-semibold text-green-600">
+                +8.8%
+              </p>
+              <h3 className="mt-5 font-semibold">Total expense</h3>
+              <h2 className="mt-3 text-3xl font-bold">$320,000</h2>
+            </div>
+            <div className="relative min-h-[100px] flex-1 rounded-xl bg-[#e2fbe5] p-4 lg:min-h-[180px] lg:p-6">
+              <UpwardTrending className="absolute right-6 top-4 w-[70px]" />
+              <p className="inline-block rounded-full bg-white px-3 py-1 text-sm font-semibold text-green-600">
+                +8.8%
+              </p>
+              <h3 className="mt-5 font-semibold">Total profit</h3>
+              <h2 className="mt-3 text-3xl font-bold">$320,000</h2>
+            </div>
+          </div>
+          <div className="relative mt-16 h-[350px] overflow-hidden rounded-xl border lg:py-6">
+            <LineChart />
+          </div>
+          <div className="mt-7 rounded-2xl border p-5">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Transaction history</h3>
+
+              <div className=" hidden gap-3 lg:flex">
+                <button className="rounded-lg border px-4 py-2 font-semibold">Newest</button>
+                <button className="rounded-lg px-4 py-2 font-semibold">Oldest</button>
+              </div>
+            </div>
+            <div className="mt-8 flex flex-col">
+              <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                  <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                    <table className="min-w-full divide-y divide-gray-300">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th
+                            scope="col"
+                            className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                          >
+                            Transaction
+                          </th>
+                          <th
+                            scope="col"
+                            className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                          >
+                            Type
+                          </th>
+                          <th
+                            scope="col"
+                            className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                          >
+                            Amount
+                          </th>
+                          <th
+                            scope="col"
+                            className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                          >
+                            Date
+                          </th>
+                          <th
+                            scope="col"
+                            className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                          >
+                            Status
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200 bg-white">
+                        <tr>
+                          <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                            Lindsay Walton
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                            Freelancing
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                            $150
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                            14 Aug, 2024
+                          </td>
+                          <td className="relative whitespace-nowrap py-4 pl-3 pr-4  text-sm font-medium text-green-600 sm:pr-6">
+                            Created
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="mt-10 pb-10  lg:mt-0 lg:border-l lg:pb-0 lg:pt-10">
+          <div className="lg:sticky lg:top-20">
+            <div className="   border-b pb-14 lg:p-5 lg:pb-14">
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-bold">My Cards</h2>
+                <button className="flex gap-1 font-medium">
+                  <Plus className="w-4" />
+                  Add Card
+                </button>
+              </div>
+              <div>
+                <CardStack />
+              </div>
+            </div>
+
+            <div className="lg:p-5">
+              <p className="text-lg font-semibold ">Investment that might interest you</p>
+              <div className="mt-5 flex flex-col gap-5">
+                {[1, 2].map((i) => (
+                  <div key={i} className="rounded-xl border p-4">
+                    <div className="flex items-center gap-4">
+                      <div className="h-[50px] w-[50px] overflow-hidden rounded-lg">
+                        <img
+                          src="https://images.pexels.com/photos/6646975/pexels-photo-6646975.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                          alt="banner"
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold">Electric Car Startup</h3>
+                        <p className="text-sm text-gray-500">Target: $20,000</p>
+                      </div>
+                    </div>
+                    <div className="mt-3">
+                      <p className="font-semibold">Raised: $400</p>
+                      <div className="mt-2 w-full">
+                        <div className="relative h-1 w-full overflow-hidden rounded-3xl bg-gray-200">
+                          <div
+                            style={{ width: `${(300 / 1000) * 100}%` }}
+                            className="absolute left-0 top-0 h-full w-3/12 rounded-3xl bg-[#541975]"
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </Analystics>
+  )
+}
