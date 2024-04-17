@@ -1,21 +1,18 @@
-import "@/styles/globals.css";
-import type { AppProps } from "next/app";
-import { AuthProvider } from "@pangeacyber/react-auth";
+import '@/styles/globals.css'
+import { AuthProvider } from '@pangeacyber/react-auth'
+import type { AppProps } from 'next/app'
 
 export default function App({ Component, pageProps }: AppProps) {
-  const hostedLoginURL = process?.env?.NEXT_PUBLIC_AUTHN_HOSTED_LOGIN_URL ?? "";
+  const hostedLoginURL = process?.env?.NEXT_PUBLIC_AUTHN_HOSTED_LOGIN_URL ?? ''
+  const redirectUrl = process?.env?.NEXT_PUBLIC_REDIRECT_URL ?? ''
   const authConfig = {
-    clientToken: process?.env?.NEXT_PUBLIC_AUTHN_CLIENT_TOKEN ?? "",
-    domain: process?.env?.NEXT_PUBLIC_PANGEA_DOMAIN ?? "",
-  };
+    clientToken: process?.env?.NEXT_PUBLIC_AUTHN_CLIENT_TOKEN ?? '',
+    domain: process?.env?.NEXT_PUBLIC_PANGEA_DOMAIN ?? '',
+  }
 
   return (
-    <AuthProvider
-      loginUrl={hostedLoginURL}
-      redirectUri="http://localhost:3000/dashboard"
-      config={authConfig}
-    >
+    <AuthProvider loginUrl={hostedLoginURL} redirectUri={redirectUrl} config={authConfig}>
       <Component {...pageProps} />
     </AuthProvider>
-  );
+  )
 }

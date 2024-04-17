@@ -35,7 +35,7 @@ export default async function Signup(req: NextApiRequest, res: NextApiResponse) 
       const auth = new AuthNService(AUTHN_TOKEN, PangeaConfig)
       const startResponse = await auth.flow.start({
         email: data.email,
-        cb_uri: 'http://localhost:3000/dashboard',
+        cb_uri: process.env.NEXT_PUBLIC_REDIRECT_URL as string,
         flow_types: [AuthN.FlowType.SIGNUP],
       })
 
