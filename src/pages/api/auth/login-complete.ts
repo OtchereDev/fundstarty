@@ -37,6 +37,7 @@ export default async function Login(req: NextApiRequest, res: NextApiResponse) {
           },
         })
       }
+      // TODO: log here
       return res.json({ messge: 'Successful', response: JSON.parse(response.toJSON()) })
     } else {
       throw new Error('unauthenticated')

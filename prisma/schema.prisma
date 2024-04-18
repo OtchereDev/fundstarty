@@ -11,12 +11,11 @@ datasource db {
 }
 
 model Category {
-  id           Int         @id @default(autoincrement())
-  name         String
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  Fundraiser   Fundraiser? @relation(fields: [fundraiserId], references: [id])
-  fundraiserId String?
+  id         Int          @id @default(autoincrement())
+  name       String
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  Fundraiser Fundraiser[]
 }
 
 model Fundraiser {
@@ -40,11 +39,12 @@ model Fundraiser {
 model Comment {
   id           String      @id @default(uuid())
   message      String
-  sponsor      String
+  sponsor      User        @relation(fields: [userId], references: [id])
   Fundraiser   Fundraiser? @relation(fields: [fundraiserId], references: [id])
   fundraiserId String?
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
+  userId       String
 }
 
 model FundInvestment {
@@ -64,20 +64,23 @@ model User {
   pangeaUserId String?
   investments  FundInvestment[]
   Fundraiser   Fundraiser[]
+  wallet       Wallet[]
   createdAt    DateTime         @default(now())
   updatedAt    DateTime         @updatedAt
+  Comment      Comment[]
 }
 
 model Wallet {
-  id          String   @id @default(uuid())
-  cardNumber  String
-  cvv         String
-  cardHolder  String
-  expiryMonth String
-  expiryYear  String
-  isDeleted   Boolean
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id         String   @id @default(uuid())
+  cardNumber String
+  cvv        String
+  cardHolder String
+  user       User     @relation(fields: [userId], references: [id])
+  expiryDate String
+  isDeleted  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  userId     String
 }
 
 model Transaction {

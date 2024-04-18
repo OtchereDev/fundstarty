@@ -68,6 +68,7 @@ export default async function Signup(req: NextApiRequest, res: NextApiResponse) 
                 },
               })
             } catch (error) {}
+            // TODO: log here
             return res.json({ message: 'Successfully sign up...Please log in' })
           }
         }
