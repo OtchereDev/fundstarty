@@ -105,7 +105,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
       console.log(`❌ Error message: ${err.message}`)
       res
         .status(400)
-        .send(`Testify me: Webhook Error: ${webhookSecret} sign: ${sig} ${err.message}`)
+        .send(`Testify me: Webhook Error: ${webhookSecret} sign: ${req.headers} ${err.message}`)
       return
     }
 
