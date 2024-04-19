@@ -51,6 +51,22 @@ export default async function Fundraiser(req: NextApiRequest, res: NextApiRespon
       fundraiser.comments = comments
     }
 
+    if (fundraiser?.investments.length) {
+      const investments = []
+      for (let investment of fundraiser.investments) {
+        const newComment = investment
+
+        const sponsor = await auth.user.profile.getProfile({
+          email: investment?.User?.email as string,
+        })
+        const profile = sponsor.result.profile
+        newComment.User = { ...newComment.User, ...(profile as any) }
+        investments.push(newComment)
+      }
+
+      fundraiser.investments = investments
+    }
+
     return res.json({ message: 'Successful', fundraiser })
   } else {
     return res.status(403).json({ message: 'Method not supported' })
