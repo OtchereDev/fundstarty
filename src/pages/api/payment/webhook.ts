@@ -87,28 +87,27 @@
 // }
 
 import { NextApiRequest, NextApiResponse } from 'next'
-import { default as Stripe, default as stripe } from 'stripe'
+import { default as Stripe } from 'stripe'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
-  const webhookSecret: string = process.env.STRIPE_WEBHOOK as string
-
   if (req.method === 'POST') {
     const sig = req.headers['stripe-signature']!
+
+    if (!sig)
+      return res.status(400).json({
+        message: 'Invalid signature',
+      })
 
     let event: Stripe.Event
 
     console.log('body is', req.body)
-    const body = await buffer(req)
-    // console.log(body.toString(), sig, webhookSecret)
+
     try {
-      event = stripe.webhooks.constructEvent(body.toString(), sig, webhookSecret)
+      event = req.body
+      return res.json({ received: true, event })
     } catch (err: any) {
-      // On error, log and return the error message
-      console.log(`❌ Error message: ${err.message}`)
       res.status(400).json({
         message: err.message,
-        sig,
-        body,
       })
       return
     }
@@ -133,28 +132,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
     res.setHeader('Allow', 'POST')
     res.status(405).end('Method Not Allowed')
   }
-}
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-}
-
-const buffer = (req: NextApiRequest) => {
-  return new Promise<Buffer>((resolve, reject) => {
-    const chunks: Buffer[] = []
-
-    req.on('data', (chunk: Buffer) => {
-      chunks.push(chunk)
-    })
-
-    req.on('end', () => {
-      resolve(Buffer.concat(chunks))
-    })
-
-    req.on('error', reject)
-  })
 }
 
 export default handler
