@@ -50,14 +50,13 @@ export default async function Fundraisers(req: NextApiRequest, res: NextApiRespo
         categoryId: true,
         amountRaising: true,
         image: true,
+        expiryDate: true,
+        createdAt: true,
       },
       where: {
         ...(search?.length ? { title: { contains: search as string, mode: 'insensitive' } } : {}),
         ...(category > 0 ? { category: { id: category } } : {}),
       },
-      // include: {
-      //   category: true,
-      // },
     })
 
     return res.json({ message: 'Sucessfully', fundraisers })
