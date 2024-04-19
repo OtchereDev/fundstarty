@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import getRawBody from 'raw-body'
-import Stripe from 'stripe'
 
 import { stripe } from '@/constants/stripe'
 import { prisma } from '@/lib/prismaClient'
@@ -13,7 +12,7 @@ export const config = {
 
 async function verifyWebhook(req: NextApiRequest, signature: string) {
   const rawBody = await getRawBody(req)
-  stripe.webhooks.constructEvent(rawBody, signature, process.env.STRIPE_WEBHOOK as string)
+  return stripe.webhooks.constructEvent(rawBody, signature, process.env.STRIPE_WEBHOOK as string)
 }
 
 export default async function Webhook(req: NextApiRequest, res: NextApiResponse) {
@@ -21,11 +20,10 @@ export default async function Webhook(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method === 'POST') {
     try {
-      await verifyWebhook(req, sig)
-      const event = req.body
+      const event = await verifyWebhook(req, sig)
 
       if (event.type == 'payment_intent.succeeded') {
-        const paymentIntent = event.data.object as Stripe.Charge
+        const paymentIntent = event.data.object
 
         const intent = await prisma.paymentIntent.findFirstOrThrow({
           where: { intentId: paymentIntent.id },
