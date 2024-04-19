@@ -97,8 +97,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
 
     let event: Stripe.Event
 
+    const body = await buffer(req)
     try {
-      const body = await buffer(req)
       event = stripe.webhooks.constructEvent(body, sig, webhookSecret)
     } catch (err: any) {
       // On error, log and return the error message
@@ -106,6 +106,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
       res.status(400).json({
         message: err.message,
         sig,
+        body,
       })
       return
     }
