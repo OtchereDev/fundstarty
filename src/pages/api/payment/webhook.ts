@@ -48,8 +48,8 @@ export default async function Webhook(req: NextApiRequest, res: NextApiResponse)
       } else {
         throw new Error('errored')
       }
-    } catch (error) {
-      return res.status(401).json({})
+    } catch (error: any) {
+      return res.status(401).json({ err: error.message })
     }
   } else {
     return res.status(401).json({ message: 'Method not allowed' })
