@@ -99,7 +99,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
 
     const body = await buffer(req)
     try {
-      event = stripe.webhooks.constructEvent(body, sig, webhookSecret)
+      event = stripe.webhooks.constructEvent(body.toString(), sig, webhookSecret)
     } catch (err: any) {
       // On error, log and return the error message
       console.log(`❌ Error message: ${err.message}`)
