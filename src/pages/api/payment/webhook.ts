@@ -93,7 +93,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
   const webhookSecret: string = process.env.STRIPE_WEBHOOK as string
 
   if (req.method === 'POST') {
-    const sig = req.headers['stripe-signature'] as string
+    const sig = (req?.headers as any)?.get('stripe-signature') as string
 
     let event: Stripe.Event
 
