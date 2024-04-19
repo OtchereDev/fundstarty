@@ -1,7 +1,8 @@
-import pangea, { AUTHN_TOKEN } from '@/constants/pangea'
-import { prisma } from '@/lib/prismaClient'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { AuthN, AuthNService } from 'pangea-node-sdk'
+
+import pangea, { AUTHN_TOKEN } from '@/constants/pangea'
+import { prisma } from '@/lib/prismaClient'
 
 export default async function Login(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {

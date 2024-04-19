@@ -1,11 +1,12 @@
+import Joi from 'joi'
+import { NextApiRequest, NextApiResponse } from 'next'
+import { AuthNService } from 'pangea-node-sdk'
+
 import pangea, { AUTHN_TOKEN } from '@/constants/pangea'
 import { PasswordRegex } from '@/constants/regex'
 import { getBearerToken, validToken } from '@/lib/auth'
 import { getJWTPayload } from '@/lib/decodeJwt'
 import { generateRandomId } from '@/lib/keys'
-import Joi from 'joi'
-import { NextApiRequest, NextApiResponse } from 'next'
-import { AuthNService } from 'pangea-node-sdk'
 
 const joiScheme = Joi.object({
   oldPassword: Joi.string().required(),

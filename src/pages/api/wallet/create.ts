@@ -1,11 +1,12 @@
+import { NextApiRequest, NextApiResponse } from 'next'
+import { RedactService, VaultService } from 'pangea-node-sdk'
+import { v4 as uuid } from 'uuid'
+
 import pangea from '@/constants/pangea'
 import { CardRegex, NumberStringRegex } from '@/constants/regex'
 import { getBearerToken, validateToken } from '@/lib/auth'
 import { getUserEmail } from '@/lib/decodeJwt'
 import { prisma } from '@/lib/prismaClient'
-import { NextApiRequest, NextApiResponse } from 'next'
-import { RedactService, VaultService } from 'pangea-node-sdk'
-import { v4 as uuid } from 'uuid'
 
 export default async function WalletCreate(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {

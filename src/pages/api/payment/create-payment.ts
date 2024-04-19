@@ -1,9 +1,10 @@
+import Joi from 'joi'
+import { NextApiRequest, NextApiResponse } from 'next'
+
 import { stripe } from '@/constants/stripe'
 import { getBearerToken, validateToken } from '@/lib/auth'
 import { getUserEmail } from '@/lib/decodeJwt'
 import { prisma } from '@/lib/prismaClient'
-import Joi from 'joi'
-import { NextApiRequest, NextApiResponse } from 'next'
 
 const intentSchema = Joi.object({
   amount: Joi.number().min(1),

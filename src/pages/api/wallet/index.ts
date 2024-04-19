@@ -1,7 +1,8 @@
+import { NextApiRequest, NextApiResponse } from 'next'
+
 import { getBearerToken, validateToken } from '@/lib/auth'
 import { getUserEmail } from '@/lib/decodeJwt'
 import { prisma } from '@/lib/prismaClient'
-import { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function WalletList(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {

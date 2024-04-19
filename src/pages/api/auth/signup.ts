@@ -1,8 +1,9 @@
+import { NextApiRequest, NextApiResponse } from 'next'
+import { AuthN, AuthNService } from 'pangea-node-sdk'
+
 import PangeaConfig, { AUTHN_TOKEN } from '@/constants/pangea'
 import { EmailRegex, PasswordRegex } from '@/constants/regex'
 import { prisma } from '@/lib/prismaClient'
-import { NextApiRequest, NextApiResponse } from 'next'
-import { AuthN, AuthNService } from 'pangea-node-sdk'
 
 export default async function Signup(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {

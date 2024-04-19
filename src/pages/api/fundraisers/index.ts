@@ -1,9 +1,10 @@
-import { getBearerToken, validateToken } from '@/lib/auth'
-import { getUserEmail } from '@/lib/decodeJwt'
-import { prisma } from '@/lib/prismaClient'
 import { v2 as cloudinary } from 'cloudinary'
 import joi from 'joi'
 import { NextApiRequest, NextApiResponse } from 'next'
+
+import { getBearerToken, validateToken } from '@/lib/auth'
+import { getUserEmail } from '@/lib/decodeJwt'
+import { prisma } from '@/lib/prismaClient'
 
 cloudinary.config({
   cloud_name: 'otcheredev',

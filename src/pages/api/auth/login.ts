@@ -1,7 +1,8 @@
-import PangeaConfig, { AUTHN_TOKEN } from '@/constants/pangea'
-import { EmailRegex } from '@/constants/regex'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { AuthN, AuthNService } from 'pangea-node-sdk'
+
+import PangeaConfig, { AUTHN_TOKEN } from '@/constants/pangea'
+import { EmailRegex } from '@/constants/regex'
 
 export default async function Login(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {

@@ -1,5 +1,6 @@
-import { prisma } from '@/lib/prismaClient'
 import { NextApiRequest, NextApiResponse } from 'next'
+
+import { prisma } from '@/lib/prismaClient'
 
 export default async function DeletCategory(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'DELETE') {
