@@ -93,7 +93,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
   const webhookSecret: string = process.env.STRIPE_WEBHOOK as string
 
   if (req.method === 'POST') {
-    const sig = (req?.headers as any)?.get('stripe-signature') as string
+    const sig = req.headers['stripe-signature']!
 
     let event: Stripe.Event
 
@@ -103,7 +103,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
     } catch (err: any) {
       // On error, log and return the error message
       console.log(`❌ Error message: ${err.message}`)
-      res.status(400).send(`Webhook Error: ${webhookSecret} ${sig} ${err.message}`)
+      res.status(400).send(`Webhook Error: ${webhookSecret} sign:${sig} ${err.message}`)
       return
     }
 
