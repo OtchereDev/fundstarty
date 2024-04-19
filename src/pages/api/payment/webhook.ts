@@ -97,8 +97,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
 
     let event: Stripe.Event
 
+    console.log('body is', req.body)
     const body = await buffer(req)
-    console.log(body.toString(), sig, webhookSecret)
+    // console.log(body.toString(), sig, webhookSecret)
     try {
       event = stripe.webhooks.constructEvent(body.toString(), sig, webhookSecret)
     } catch (err: any) {
