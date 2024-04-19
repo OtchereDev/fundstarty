@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 
 import { stripe } from '@/constants/stripe'
 import { prisma } from '@/lib/prismaClient'
+import Stripe from 'stripe'
 
 export const config = {
   api: {
@@ -31,11 +32,25 @@ async function verifyWebhook(req: NextApiRequest, signature: string) {
 }
 
 export default async function Webhook(req: NextApiRequest, res: NextApiResponse) {
-  const sig = req.headers['stripe-signature'] as string
+  // const sig = req.headers['stripe-signature'] as string
 
   if (req.method === 'POST') {
     try {
-      const event = await verifyWebhook(req, sig)
+      // const event = await verifyWebhook(req, sig)
+      const sig = req.headers['stripe-signature'] as string
+      const webhookSecret: string = process.env.STRIPE_WEBHOOK as string
+
+      let event: Stripe.Event
+
+      try {
+        const body = await buffer(req)
+        event = stripe.webhooks.constructEvent(body, sig, webhookSecret)
+      } catch (err: any) {
+        // On error, log and return the error message
+        console.log(`❌ Error message: ${err.message}`)
+        res.status(400).send(`Webhook Error: ${err.message}`)
+        return
+      }
 
       if (event.type == 'payment_intent.succeeded') {
         const paymentIntent = event.data.object
