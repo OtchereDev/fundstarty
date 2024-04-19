@@ -14,6 +14,11 @@ export default async function Fundraiser(req: NextApiRequest, res: NextApiRespon
       include: {
         category: true,
         organizer: true,
+        investments: {
+          include: {
+            User: true,
+          },
+        },
         comments: {
           include: {
             sponsor: {
