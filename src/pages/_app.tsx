@@ -11,7 +11,12 @@ export default function App({ Component, pageProps }: AppProps) {
   }
 
   return (
-    <AuthProvider loginUrl={hostedLoginURL} redirectUri={redirectUrl} config={authConfig}>
+    <AuthProvider
+      cookieOptions={{ cookieName: 'fundstartAuth', useCookie: true }}
+      loginUrl={hostedLoginURL}
+      redirectUri={redirectUrl}
+      config={authConfig}
+    >
       <Component {...pageProps} />
     </AuthProvider>
   )

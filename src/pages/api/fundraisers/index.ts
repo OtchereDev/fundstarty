@@ -33,10 +33,31 @@ export default async function Fundraisers(req: NextApiRequest, res: NextApiRespo
     }
 
     const fundraisers = await prisma.fundraiser.findMany({
+      select: {
+        _count: {
+          select: {
+            investments: true,
+          },
+        },
+        title: true,
+        category: true,
+        description: true,
+        id: true,
+        userId: true,
+        organizer: true,
+        investments: true,
+        comments: true,
+        categoryId: true,
+        amountRaising: true,
+        image: true,
+      },
       where: {
         ...(search?.length ? { title: { contains: search as string, mode: 'insensitive' } } : {}),
-        ...(category > 0 ? { category: { some: { id: category } } } : {}),
+        ...(category > 0 ? { category: { id: category } } : {}),
       },
+      // include: {
+      //   category: true,
+      // },
     })
 
     return res.json({ message: 'Sucessfully', fundraisers })

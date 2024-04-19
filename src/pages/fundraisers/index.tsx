@@ -9,6 +9,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import cookie from 'cookie'
+import { GetServerSideProps } from 'next'
 
 export default function Index() {
   return (
@@ -60,4 +62,22 @@ export default function Index() {
       </section>
     </Dashboard>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  if (!req.headers.cookie) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+
+  let cooki = cookie.parse(req.headers.cookie)
+
+  console.log('authorizationHeader:', cooki)
+  return {
+    props: {},
+  }
 }
