@@ -37,7 +37,7 @@ export default async function Payment(req: NextApiRequest, res: NextApiResponse)
 
       const paymentIntent = await stripe.paymentIntents.create({
         currency: 'usd',
-        amount: value.amount,
+        amount: value.amount * 100,
         metadata: {
           name: value.name,
         },
