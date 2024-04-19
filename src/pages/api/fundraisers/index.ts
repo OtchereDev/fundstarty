@@ -79,8 +79,15 @@ export default async function Fundraisers(req: NextApiRequest, res: NextApiRespo
       folder: 'fundstart',
     })
 
+    const catId = value.categoryId
+    delete value.categoryId
     await prisma.fundraiser.create({
-      data: { ...value, image: imgResult.url, organizer: { connect: { id: user?.id as string } } },
+      data: {
+        ...value,
+        image: imgResult.url,
+        category: { connect: { id: catId } },
+        organizer: { connect: { id: user?.id as string } },
+      },
     })
 
     return res.json({ message: 'Successfully' })
