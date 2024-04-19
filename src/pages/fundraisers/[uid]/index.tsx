@@ -3,15 +3,21 @@ import Header from '@/components/detail/Header'
 import Dashboard from '@/components/layouts/dashboard'
 import pangea, { AUTHN_TOKEN } from '@/constants/pangea'
 import { prisma } from '@/lib/prismaClient'
-import { Fundraiser } from '@prisma/client'
+import { FundInvestment, Fundraiser } from '@prisma/client'
 import { GetServerSideProps } from 'next'
 import { AuthNService } from 'pangea-node-sdk'
 
-export default function Detail({ fundraiser }: { fundraiser: Fundraiser }) {
+export default function Detail({
+  fundraiser,
+}: {
+  fundraiser: Fundraiser & {
+    investments: (FundInvestment & { first_name: string; last_name: string })[]
+  }
+}) {
   return (
     <Dashboard title={fundraiser?.title ?? ''}>
       <main className="pb-10">
-        <Header />
+        <Header fundraiser={fundraiser} />
         <Description />
       </main>
     </Dashboard>

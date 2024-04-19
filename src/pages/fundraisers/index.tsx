@@ -12,7 +12,7 @@ import {
 
 export default function Index() {
   return (
-    <Dashboard>
+    <Dashboard title="Available Investment opportunity">
       <section className="px-4 pb-14 pt-32 lg:mb-20">
         <div className="flex flex-col items-center justify-between lg:flex-row">
           <div>

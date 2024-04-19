@@ -7,7 +7,7 @@ const DonateItem = ({
   className,
 }: {
   borderClass?: string
-  donate: { name: string; amount: number; createdAt: string }
+  donate: { first_name: string; last_name: string; amount: any; createdAt: any }
   className?: string
 }) => {
   return (
@@ -16,7 +16,9 @@ const DonateItem = ({
         <User />
       </div>
       <div>
-        <h3 className="text-lg">{donate.name}</h3>
+        <h3 className="text-lg">
+          {donate.first_name} {donate.last_name}
+        </h3>
         <div className="flex items-center">
           <span className="mr-2 text-lg">${donate.amount}</span>
 

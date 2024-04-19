@@ -46,7 +46,7 @@ export default function Invest() {
     }
   }, [donation])
   return (
-    <Dashboard>
+    <Dashboard title="Donate To">
       <div className="flex h-full w-full flex-col md:pt-10 lg:mx-auto lg:min-w-[1280px] lg:flex-row  lg:pb-20 lg:pt-10">
         <div className="w-full bg-white md:px-5  md:py-4 lg:w-7/12 lg:rounded-md lg:py-2">
           <div className="mb-3 hidden border-b px-3 lg:block">

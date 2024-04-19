@@ -1,3 +1,4 @@
+import { calculateRaised } from '@/lib/utils'
 import { FundInvestment, Fundraiser } from '@prisma/client'
 import { differenceInDays, parseISO } from 'date-fns'
 import Link from 'next/link'
@@ -13,11 +14,6 @@ export default function CampaignCard({
     investments: FundInvestment[]
   }
 }>) {
-  const calculateRaised = () => {
-    return fundraiser.investments.reduce((prev, curr) => {
-      return prev + parseFloat(curr.amount.toString())
-    }, 0)
-  }
   return (
     <div className="relative max-w-[327px] overflow-hidden rounded-lg border lg:min-w-[327px] lg:flex-1 lg:flex-shrink-0">
       <Link className="block" href={`/fundraisers/${fundraiser.id}`}>
@@ -38,7 +34,8 @@ export default function CampaignCard({
         <div className="border-t p-4">
           <div className="flex items-center justify-between">
             <p className="text-xl font-bold">
-              <span className="font-normal text-[#3A7519]">Raised of</span> £{calculateRaised()}
+              <span className="font-normal text-[#3A7519]">Raised of</span> £
+              {calculateRaised(fundraiser)}
             </p>
 
             <p className="text-xl font-bold">
