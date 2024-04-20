@@ -23,7 +23,7 @@ export default function Fundraiser({
       </Link>
 
       <div>
-        <p className="mt-4 text-sm text-green-500">{fundraiser.category.name}</p>
+        <p className="mt-4 text-sm text-green-700">{fundraiser.category.name}</p>
 
         <div className="mt-3 flex items-center gap-4">
           <div className="flex h-[40px] w-[40px] items-center justify-center rounded-xl bg-[#fdeed7]">

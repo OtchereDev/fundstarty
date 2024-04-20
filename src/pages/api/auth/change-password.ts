@@ -19,9 +19,12 @@ export default async function ChangePassword(req: NextApiRequest, res: NextApiRe
     const payload = getJWTPayload(getBearerToken(req))
     const auth = new AuthNService(AUTHN_TOKEN, pangea)
     const pui = generateRandomId()
+    // auth.agreements.
 
     const body = req.body
     const { value, error } = joiScheme.validate(body)
+
+    // auth.client.session.
 
     if (error !== undefined) {
       const errors = error.details.map((e) => e.message)

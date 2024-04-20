@@ -14,63 +14,53 @@ import { Chevron } from '@/components/assets/icons'
 import Header from '@/components/invest/Header'
 import PayForm from '@/components/invest/PayForm'
 import Dashboard from '@/components/layouts/dashboard'
+import { useAuth } from '@pangeacyber/react-auth'
+import { toast } from 'sonner'
 
 export default function Invest({
   fundraiser,
+  fundstartAuth,
 }: {
   fundraiser: Fundraiser & {
     investments: (FundInvestment & { User: { first_name: string; last_name: string } })[]
     category: Category
     organizer: User
   }
+  fundstartAuth?: string
 }) {
   const [donationData, setDonationData] = useState<any>()
   const [donation, setDonation] = useState('')
   const [tip, setTip] = useState('0')
   const [showPayment, setShowPayment] = useState(false)
   const [donorName, setDonorName] = useState('')
-  const [intentId, setIntentId] = useState('')
+  const { login } = useAuth()
 
   const { query } = useRouter()
   const { uid } = query
 
-  async function getPaymentId() {
-    const req = await fetch('/api/payment/create-payment', {
-      method: 'POST',
-      body: JSON.stringify({
-        amount: parseFloat(donation),
-        tip: parseFloat(tip),
-        fundraiserId: fundraiser.id,
-        name: donorName,
-      }),
-    })
-
-    if (req.ok) {
-      const response = await req.json()
-      setIntentId(response.intentId)
-      return response.clientSecret
-    }
-  }
-
-  // const user  = useSelector(state => state.user?.email);
-
-  // useEffect(() => {
-  //   if (user) setDonorName(user);
-  // }, [user]);
-
   const handleShowPayment = () => {
+    if (!fundstartAuth) {
+      toast.error('Please login or sign up', {
+        description: 'To continue, please login or sign up',
+        action: {
+          label: 'Login / Signup',
+          onClick: () => login(),
+        },
+      })
+      return
+    }
     if (donation.length && (tip.length || tip == '0') && donorName.length) {
       setDonationData({
         amount: (parseInt(donation) + parseFloat(tip)) * 100,
         name: donorName,
-        fundraiser_id: uid,
+        fundraiserId: uid,
         tip: parseFloat(tip),
       })
       setShowPayment(true)
     } else if (!donorName.length) {
-      // toast.error("Please provide your full name ");
+      toast.error('Error', { description: 'Please provide your full name ' })
     } else {
-      // toast.error("Please provide a valid donation amount and tip value");
+      toast.error('Error', { description: 'Please provide a valid donation amount and tip value' })
     }
   }
 
@@ -158,7 +148,9 @@ export default function Invest({
             )}
 
             <div className={`${showPayment ? 'block' : 'hidden'} my-3`}>
-              {showPayment && <PayForm donationData={donationData} />}
+              {showPayment && (
+                <PayForm fundraiserAuth={fundstartAuth} donationData={donationData} />
+              )}
             </div>
           </div>
 

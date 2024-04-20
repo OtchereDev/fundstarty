@@ -5,12 +5,12 @@ export const getBearerToken = (req: NextApiRequest) => {
     req.headers instanceof Headers
       ? req.headers.get('authorization')
       : (req.headers as any)?.authorization
+  // console.log(authorizationHeader)
 
   const authorizationHeaderParts = authorizationHeader?.split(' ')
 
   const bearerToken =
     authorizationHeaderParts?.[0]?.toLowerCase() === 'bearer' && authorizationHeaderParts?.[1]
-  // console.log('bearer token: ', bearerToken)
   return bearerToken
 }
 
@@ -39,6 +39,7 @@ export const validateToken = async (token: string) => {
       )
     }
   }
+  console.log('resilre', result)
   return result
 }
 

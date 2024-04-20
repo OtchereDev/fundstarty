@@ -1,5 +1,13 @@
+import NameUpdate from '@/components/account/NameUpdate'
+import PhoneUpdate from '@/components/account/PhoneUpdate'
 import { Camera } from '@/components/assets/icons'
 import Account from '@/components/layouts/account'
+import pangea, { AUTHN_TOKEN } from '@/constants/pangea'
+import { getJWTPayload } from '@/lib/decodeJwt'
+import cookie from 'cookie'
+import { GetServerSideProps } from 'next'
+import { AuthNService } from 'pangea-node-sdk'
+import { useState } from 'react'
 
 function EditButton() {
   return (
@@ -9,7 +17,20 @@ function EditButton() {
   )
 }
 
-export default function Settings() {
+export default function Settings({
+  data,
+  fundstartAuth,
+}: Readonly<{ data: any; fundstartAuth: string }>) {
+  console.log({ data })
+  const [profile, setProfile] = useState({
+    firstName: data?.result?.profile?.first_name,
+    lastName: data?.result?.profile?.last_name,
+    phone: data?.result?.profile?.phone ?? '',
+  })
+
+  const updateProfile = (profile: { firstName: string; lastName: string; phone: string }) => {
+    setProfile((p) => ({ ...p, ...profile }))
+  }
   return (
     <Account>
       <section className="px-5">
@@ -26,23 +47,32 @@ export default function Settings() {
             <div className="borde-2 mt-10 flex items-center border-t border-gray-300 py-8">
               <div className="flex-1">
                 <p className="text-lg font-semibold">Name</p>
-                <p className="mt-3 text-lg">Oliver</p>
+                <p className="mt-3 text-lg">
+                  {profile?.firstName} {profile?.lastName}
+                </p>
               </div>
-              <EditButton />
+              <NameUpdate callback={updateProfile} data={profile} fundraiserAuth={fundstartAuth}>
+                <button className="rounded-xl border border-gray-300 px-7 py-3.5 text-lg font-semibold">
+                  Edit
+                </button>
+              </NameUpdate>
             </div>
             <div className="borde-2  flex items-center border-t border-gray-300 py-8">
               <div className="flex-1">
                 <p className="text-lg font-semibold">Phone number</p>
-                <p className="mt-3 text-lg">+44 7002 843562</p>
+                <p className="mt-3 text-lg">{profile?.phone}</p>
               </div>
-              <EditButton />
+              <PhoneUpdate callback={updateProfile} data={profile} fundraiserAuth={fundstartAuth}>
+                <button className="rounded-xl border border-gray-300 px-7 py-3.5 text-lg font-semibold">
+                  Edit
+                </button>
+              </PhoneUpdate>
             </div>
             <div className="borde-2  flex items-center border-t border-gray-300 py-8">
               <div className="flex-1">
                 <p className="text-lg font-semibold">Email</p>
-                <p className="mt-3 text-lg">Oliverotchere4@gmail.cm</p>
+                <p className="mt-3 text-lg">{data?.result?.email}</p>
               </div>
-              <EditButton />
             </div>
             <div className="borde-2  flex items-center border-t border-gray-300 py-8">
               <div className="flex-1">
@@ -66,4 +96,39 @@ export default function Settings() {
       </section>
     </Account>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  if (!req.headers.cookie) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+
+  let { fundstartAuth } = cookie.parse(req.headers.cookie)
+  if (!fundstartAuth)
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+
+  const auth = new AuthNService(AUTHN_TOKEN, pangea)
+
+  const email = getJWTPayload(fundstartAuth).email as string
+
+  const data = await auth.user.profile.getProfile({
+    email,
+  })
+
+  return {
+    props: {
+      data: JSON.parse(data.toJSON()),
+      fundstartAuth,
+    },
+  }
 }

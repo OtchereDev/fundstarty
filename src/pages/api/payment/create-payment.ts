@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 
 import { stripe } from '@/constants/stripe'
 import { getBearerToken, validateToken } from '@/lib/auth'
-import { getUserEmail } from '@/lib/decodeJwt'
+import { getJWTPayload } from '@/lib/decodeJwt'
 import { prisma } from '@/lib/prismaClient'
 
 const intentSchema = Joi.object({
@@ -16,9 +16,12 @@ const intentSchema = Joi.object({
 export default async function Payment(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     const token = getBearerToken(req)
-    if (!(await validateToken(token))) return res.status(400).json({ message: 'Unauthenticated' })
+    const result = await validateToken(token)
+    if (!result) return res.status(400).json({ message: 'Unauthenticated' })
 
-    const email = getUserEmail(req)
+    const payload = getJWTPayload(token)
+    const email = payload.email as string
+    const puid = payload.sub
 
     const body = req.body
     const { value, error } = intentSchema.validate(body)
@@ -46,8 +49,14 @@ export default async function Payment(req: NextApiRequest, res: NextApiResponse)
       await prisma.paymentIntent.create({
         data: {
           sponsor: {
-            connect: {
-              email,
+            connectOrCreate: {
+              where: {
+                email,
+              },
+              create: {
+                email: email,
+                pangeaUserId: puid as string,
+              },
             },
           },
           fundraiser: {
@@ -66,6 +75,7 @@ export default async function Payment(req: NextApiRequest, res: NextApiResponse)
         intentId: paymentIntent.id,
       })
     } catch (error) {
+      console.log(error)
       return res.status(400).json({ message: 'Fundraiser does not exist' })
     }
   } else {

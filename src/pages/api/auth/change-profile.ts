@@ -9,7 +9,7 @@ import { getJWTPayload } from '@/lib/decodeJwt'
 const joiScheme = Joi.object({
   firstName: Joi.string().required(),
   lastName: Joi.string().required(),
-  phone: Joi.string().required(),
+  phone: Joi.string(),
 })
 
 export default async function ChangePassword(req: NextApiRequest, res: NextApiResponse) {

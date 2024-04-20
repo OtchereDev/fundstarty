@@ -3,14 +3,14 @@ import { loadStripe } from '@stripe/stripe-js'
 import CheckoutForm from './CheckoutForm'
 
 const promise = loadStripe(
-  'pk_test_51JOAZuGHLJaKf96VNErPKs05GMyo0gIT6XFHHUBDEVFgzXGewjl2CigFHi1Ynb8jsK6GeEaTfibi7aMyP7ofdSPn00VHCLCq4J'
+  'pk_test_51P72zYP6LCSjRIMK8hCCwvhmBdfzl76YJmeC94vMPfmrhylfSQVBvcqyxTNVpW7QxrxzlpwC6lxH8fAMIBO58fKp00uSeUb83a'
 )
 
-export default function PayForm({ donationData }: any) {
+export default function PayForm({ donationData, fundraiserAuth }: any) {
   return (
     <div>
       <Elements stripe={promise}>
-        <CheckoutForm donationData={donationData} />
+        <CheckoutForm donationData={donationData} fundraiserAuth={fundraiserAuth} />
       </Elements>
     </div>
   )
