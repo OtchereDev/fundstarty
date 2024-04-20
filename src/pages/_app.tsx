@@ -18,8 +18,10 @@ export default function App({ Component, pageProps }: AppProps) {
       redirectUri={redirectUrl}
       config={authConfig}
     >
-      <NextNProgress color="#541975" />
-      <Component {...pageProps} />
+      <>
+        <NextNProgress color="#541975" />
+        <Component {...pageProps} />
+      </>
     </AuthProvider>
   )
 }
