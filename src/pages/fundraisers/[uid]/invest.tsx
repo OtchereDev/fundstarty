@@ -51,7 +51,7 @@ export default function Invest({
     }
     if (donation.length && (tip.length || tip == '0') && donorName.length) {
       setDonationData({
-        amount: (parseInt(donation) + parseFloat(tip)) * 100,
+        amount: parseInt(donation) + parseFloat(tip),
         name: donorName,
         fundraiserId: uid,
         tip: parseFloat(tip),
