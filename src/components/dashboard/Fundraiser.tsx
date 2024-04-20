@@ -17,7 +17,7 @@ export default function Fundraiser({
   return (
     <div className="max-w-[400px] overflow-hidden rounded-2xl border bg-white p-4 shadow lg:flex-row">
       <Link href={`/fundraisers/${fundraiser.id}`}>
-        <div className="h-[250px] w-full overflow-hidden rounded-3xl">
+        <div className="h-[200px] w-full overflow-hidden rounded-3xl lg:h-[250px]">
           <img className="h-full w-full object-cover" alt="banner" src={fundraiser.image} />
         </div>
       </Link>
@@ -37,10 +37,9 @@ export default function Fundraiser({
           </div>
         </div>
 
-        <div className="mt-4 flex gap-4">
+        <div className="mt-4 flex flex-col gap-4 lg:flex-row">
           <div className="flex gap-5">
             <div className="flex h-[40px] w-[40px] items-center justify-center rounded-xl bg-[#d8eaf5]">
-              {/* <Info className="w-[20px]" color="#3e95cc" /> */}
               <BadgePoundSterling className="w-[20px]" color="#3e95cc" />
             </div>
             <div>

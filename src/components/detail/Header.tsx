@@ -30,15 +30,15 @@ const Header = ({
 
   const total = calculateRaised(fundraiser)
   return (
-    <div className="flex w-full flex-col lg:flex-row lg:gap-10">
+    <div className="flex w-full flex-col pt-28 lg:flex-row lg:gap-10 lg:pt-0">
       <div className="w-full  items-center justify-center lg:flex lg:w-8/12 lg:py-10 ">
-        <div className="relative h-[350px] w-full overflow-hidden  lg:h-[450px] lg:flex-1 lg:rounded-3xl ">
+        <div className="relative h-[250px] w-full overflow-hidden  rounded-3xl lg:h-[450px] lg:flex-1 ">
           <img src={fundraiser.image} alt="banner" className="h-full w-full object-cover" />
         </div>
       </div>
       <div className=" top-0 w-full py-5  lg:mx-auto lg:w-4/12 lg:py-10">
         {/* Donate Card Part */}
-        <div className="px-5 py-5 lg:sticky lg:top-28 lg:w-11/12 lg:rounded-md lg:shadow-lg ">
+        <div className="py-5 lg:sticky lg:top-28 lg:w-11/12 lg:rounded-3xl lg:px-5 lg:shadow-lg ">
           <h2 className="text-2xl font-bold lg:text-3xl ">
             £{total} raised{' '}
             <span className=" text-sm font-normal ">of £{fundraiser.amountRaising.toString()}</span>

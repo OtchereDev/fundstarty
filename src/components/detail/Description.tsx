@@ -10,7 +10,7 @@ export default function Description({
 }>) {
   // console.log(fundraiser.comments)
   return (
-    <div className="w-full border-b px-4   lg:w-8/12 lg:px-10">
+    <div className="w-full border-b lg:w-8/12 lg:px-10">
       <h1 className="my-2  text-3xl font-semibold capitalize lg:text-5xl">{fundraiser.title}</h1>
 
       <div>

@@ -27,7 +27,7 @@ export default function Index({
 }) {
   return (
     <Analystics activeLink="Fundraisers" title="Available Investment opportunity">
-      <section className="px-4 pb-14 pt-32 lg:mb-20">
+      <section className="pb-14 pt-32 lg:mb-20 lg:px-4">
         <div className="flex flex-col items-center justify-between lg:flex-row">
           <div>
             <h1 className="text-3xl font-semibold lg:text-4xl">Top Fundraisers</h1>
@@ -36,7 +36,7 @@ export default function Index({
             </p>
           </div>
 
-          <div className="mt-5 flex w-[377px] items-center gap-2 overflow-hidden rounded-lg bg-[#f5f6f7] px-4 py-2.5 lg:mt-0">
+          <div className="mt-5 flex w-full items-center gap-2 overflow-hidden rounded-lg bg-[#f5f6f7] px-4 py-2.5 lg:mt-0 lg:w-[377px]">
             <input className=" flex-1 bg-transparent text-lg outline-none" placeholder="Search" />
             <Search />
           </div>
