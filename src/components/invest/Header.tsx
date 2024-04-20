@@ -2,19 +2,17 @@ export default function Header({
   title,
   beneficiary,
   organizer,
+  image,
 }: Readonly<{
   title: string
   beneficiary?: string
   organizer: string
+  image: string
 }>) {
   return (
     <div className="flex flex-col md:flex-row md:items-center ">
-      <div className="relative h-52 w-full overflow-hidden  md:h-32 md:w-3/12 md:rounded-md lg:w-4/12">
-        <img
-          src="https://images.pexels.com/photos/6646975/pexels-photo-6646975.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-          alt="banner"
-          className="h-full w-full object-cover"
-        />
+      <div className="relative h-52 w-full overflow-hidden  md:h-32 md:w-3/12 md:rounded-2xl lg:w-4/12">
+        <img src={image} alt="banner" className="h-full w-full object-cover" />
       </div>
       <div className="mb-3 border-b py-5 md:mb-0 md:border-0 md:py-0">
         <h3 className="px-3 pt-3">

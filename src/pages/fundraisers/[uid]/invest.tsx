@@ -1,21 +1,56 @@
+import cookie from 'cookie'
+import { Handshake } from 'lucide-react'
+import { GetServerSideProps } from 'next'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { AuthNService } from 'pangea-node-sdk'
+import { useEffect, useState } from 'react'
+
+import pangea, { AUTHN_TOKEN } from '@/constants/pangea'
+import { prisma } from '@/lib/prismaClient'
+import { Category, FundInvestment, Fundraiser, User } from '@prisma/client'
+
 import { Chevron } from '@/components/assets/icons'
 import Header from '@/components/invest/Header'
 import PayForm from '@/components/invest/PayForm'
 import Dashboard from '@/components/layouts/dashboard'
-import { Handshake } from 'lucide-react'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
 
-export default function Invest() {
+export default function Invest({
+  fundraiser,
+}: {
+  fundraiser: Fundraiser & {
+    investments: (FundInvestment & { User: { first_name: string; last_name: string } })[]
+    category: Category
+    organizer: User
+  }
+}) {
   const [donationData, setDonationData] = useState<any>()
   const [donation, setDonation] = useState('')
   const [tip, setTip] = useState('0')
   const [showPayment, setShowPayment] = useState(false)
   const [donorName, setDonorName] = useState('')
+  const [intentId, setIntentId] = useState('')
 
   const { query } = useRouter()
   const { uid } = query
+
+  async function getPaymentId() {
+    const req = await fetch('/api/payment/create-payment', {
+      method: 'POST',
+      body: JSON.stringify({
+        amount: parseFloat(donation),
+        tip: parseFloat(tip),
+        fundraiserId: fundraiser.id,
+        name: donorName,
+      }),
+    })
+
+    if (req.ok) {
+      const response = await req.json()
+      setIntentId(response.intentId)
+      return response.clientSecret
+    }
+  }
 
   // const user  = useSelector(state => state.user?.email);
 
@@ -45,12 +80,13 @@ export default function Invest() {
       setTip((parseInt(donation.length ? donation : '0') * 0.15).toFixed(2))
     }
   }, [donation])
+
   return (
     <Dashboard activeLink="Fundraisers" title="Donate To">
       <div className="flex h-full w-full flex-col md:pt-10 lg:mx-auto lg:min-w-[1280px] lg:flex-row  lg:pb-20 lg:pt-10">
         <div className="w-full bg-white md:px-5  md:py-4 lg:w-7/12 lg:rounded-md lg:py-2">
           <div className="mb-3 hidden border-b px-3 lg:block">
-            <Link href={`/f/${uid}/`}>
+            <Link href={`/fundraisers/${fundraiser.id}/`}>
               <button className="my-5 flex items-center rounded-md bg-gray-100 px-3 py-2 font-semibold text-gray-800  shadow-sm outline-none">
                 <Chevron className="mr-2 h-5 rotate-90" />
                 <span>Go Back</span>
@@ -58,15 +94,15 @@ export default function Invest() {
             </Link>
           </div>
           <Header
-            title={"Fundraising for Oliver's car"}
-            beneficiary={'Oliver Otchere'}
-            organizer={'Oliver Otchere'}
+            title={fundraiser.title}
+            organizer={`${(fundraiser.organizer as any).first_name} ${(fundraiser.organizer as any).last_name}`}
+            image={fundraiser.image}
           />
 
           <div className="border-b px-3 py-4 md:py-8">
-            <h5 className="text-lg font-semibold text-gray-800">Enter your donation</h5>
+            <h5 className="text-lg font-semibold text-gray-800">Enter your investment amount</h5>
             <div className="my-3 flex items-center rounded-md border p-3">
-              <h3 className="text-2xl">USD</h3>
+              <h3 className="text-2xl font-bold">GBP</h3>
 
               <div className="flex items-center">
                 <input
@@ -83,7 +119,7 @@ export default function Invest() {
           </div>
 
           <div className="border-b px-3 pb-4">
-            <h6 className="my-3 font-semibold text-gray-800">Donor Name</h6>
+            <h6 className="my-3 font-semibold text-gray-800">Investor Name</h6>
             <input
               type="text"
               placeholder="Please provide your full name"
@@ -156,7 +192,7 @@ export default function Invest() {
 
               <div className="flex items-center justify-between pt-2">
                 <h5>Total Due today</h5>
-                <h5>${donation.length ? parseInt(donation) + parseFloat(tip) : '0.00'}</h5>
+                <h5>£{donation.length ? parseInt(donation) + parseFloat(tip) : '0.00'}</h5>
               </div>
             </div>
           </div>
@@ -164,4 +200,42 @@ export default function Invest() {
       </div>
     </Dashboard>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ req, query }) => {
+  const { uid } = query as any
+
+  if (!req.headers.cookie) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+
+  let { fundstartAuth } = cookie.parse(req.headers.cookie)
+
+  const auth = new AuthNService(AUTHN_TOKEN, pangea)
+
+  const fundraiser = await prisma.fundraiser.findFirst({
+    where: { id: uid as string },
+    include: {
+      category: true,
+      organizer: true,
+    },
+  })
+
+  if (fundraiser?.organizer?.email) {
+    const organizer = await auth.user.profile.getProfile({
+      email: fundraiser?.organizer?.email as string,
+    })
+
+    const profile = organizer.result.profile
+    fundraiser!.organizer = { ...fundraiser!.organizer, ...profile }
+  }
+
+  return {
+    props: { fundraiser: JSON.parse(JSON.stringify(fundraiser)), fundstartAuth },
+  }
 }

@@ -4,7 +4,6 @@ import { calculateRaised } from '@/lib/utils'
 import { FundInvestment, Fundraiser } from '@prisma/client'
 import { LineChart } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import { LogoWhite } from '../assets/icons'
 import DonateItem from './DonateItem'
 
@@ -15,9 +14,6 @@ const Header = ({
     investments: (FundInvestment & { User: { first_name: string; last_name: string } })[]
   }
 }) => {
-  const { query } = useRouter()
-  const { uid } = query
-
   const onDonationClick = () => {
     // setModalChildren(<DonationCard/>)
     // setIsModalOpen(true)
@@ -52,14 +48,14 @@ const Header = ({
             <div className="relative h-1 w-full overflow-hidden rounded-3xl bg-gray-200">
               <div
                 style={{
-                  width: `£{(total / parseFloat(fundraiser.amountRaising.toString())) * 100}%`,
+                  width: `${(total / parseFloat(fundraiser.amountRaising.toString())) * 100}%`,
                 }}
                 className="absolute left-0 top-0 h-full w-3/12 rounded-3xl bg-[#541975]"
               ></div>
             </div>
           </div>
 
-          <Link href={`/fundraisers/£{uid}/invest`}>
+          <Link href={`/fundraisers/${fundraiser.id}/invest`}>
             <button className="mt-8 flex w-full items-center justify-center gap-2 rounded-lg bg-[#541975] px-4 py-3 text-white outline-none">
               <LogoWhite className="h-[30px] w-[70px]" />
               <span className="text-center text-lg font-semibold">Invest</span>

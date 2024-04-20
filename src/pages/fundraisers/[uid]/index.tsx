@@ -1,11 +1,13 @@
-import Description from '@/components/detail/Description'
-import Header from '@/components/detail/Header'
-import Analystics from '@/components/layouts/analytics'
+import { GetServerSideProps } from 'next'
+import { AuthNService } from 'pangea-node-sdk'
+
 import pangea, { AUTHN_TOKEN } from '@/constants/pangea'
 import { prisma } from '@/lib/prismaClient'
 import { Category, Comment, FundInvestment, Fundraiser, User } from '@prisma/client'
-import { GetServerSideProps } from 'next'
-import { AuthNService } from 'pangea-node-sdk'
+
+import Description from '@/components/detail/Description'
+import Header from '@/components/detail/Header'
+import Analystics from '@/components/layouts/analytics'
 
 export default function Detail({
   fundraiser,
@@ -17,7 +19,6 @@ export default function Detail({
     comments: Comment[]
   }
 }>) {
-  console.log({ fundraiser })
   return (
     <Analystics activeLink="Fundraisers" title={fundraiser?.title ?? ''}>
       <main className="pb-10">
@@ -85,7 +86,6 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       })
       const profile = sponsor.result.profile
       newComment.User = { ...newComment.User, ...(profile as any) }
-      console.log(newComment)
       investments.push(newComment)
     }
 

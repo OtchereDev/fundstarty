@@ -1,3 +1,4 @@
+import { Toaster } from '@/components/ui/sonner'
 import '@/styles/globals.css'
 import { AuthProvider } from '@pangeacyber/react-auth'
 import type { AppProps } from 'next/app'
@@ -20,6 +21,7 @@ export default function App({ Component, pageProps }: AppProps) {
     >
       <>
         <NextNProgress color="#541975" />
+        <Toaster />
         <Component {...pageProps} />
       </>
     </AuthProvider>
