@@ -1,5 +1,6 @@
 // import DonateItem from './DonateItem'
 
+import { formatMoney } from '@/lib/formatMoney'
 import { calculateRaised } from '@/lib/utils'
 import { FundInvestment, Fundraiser } from '@prisma/client'
 import { LineChart } from 'lucide-react'
@@ -36,11 +37,11 @@ const Header = ({
           <img src={fundraiser.image} alt="banner" className="h-full w-full object-cover" />
         </div>
       </div>
-      <div className=" top-0 w-full py-5  lg:mx-auto lg:w-4/12 lg:py-10">
+      <div className=" top-0 w-full  py-5  lg:mx-auto lg:w-4/12 lg:py-10">
         {/* Donate Card Part */}
-        <div className="py-5 lg:sticky lg:top-28 lg:w-11/12 lg:rounded-3xl lg:px-5 lg:shadow-lg ">
+        <div className="bg-gray-50 py-5 lg:sticky lg:top-28 lg:w-11/12 lg:rounded-3xl lg:px-5 lg:shadow-lg ">
           <h2 className="text-2xl font-bold lg:text-3xl ">
-            £{total} raised{' '}
+            £{formatMoney(total)} raised{' '}
             <span className=" text-sm font-normal ">of £{fundraiser.amountRaising.toString()}</span>
           </h2>
 

@@ -1,3 +1,4 @@
+import { formatMoney } from '@/lib/formatMoney'
 import { formatDistanceToNow } from 'date-fns/formatDistanceToNow'
 import { User } from 'lucide-react'
 
@@ -20,7 +21,7 @@ const DonateItem = ({
           {donate.User.first_name} {donate.User.last_name}
         </h3>
         <div className="flex items-center">
-          <span className="mr-2">${donate.amount}</span>
+          <span className="mr-2">£{formatMoney(donate.amount)}</span>
 
           <span className="text-sm">
             {formatDistanceToNow(Date.parse(donate.createdAt), { addSuffix: false })}
