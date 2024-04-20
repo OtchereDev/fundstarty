@@ -7,7 +7,11 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const calculateRaised = (fundraiser: Fundraiser & { investments: FundInvestment[] }) => {
-  return fundraiser.investments.reduce((prev, curr) => {
-    return prev + parseFloat(curr.amount.toString())
-  }, 0)
+  return parseFloat(
+    fundraiser.investments
+      .reduce((prev, curr) => {
+        return prev + parseFloat(curr.amount.toString())
+      }, 0)
+      .toFixed(2)
+  )
 }

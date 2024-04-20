@@ -1,62 +1,80 @@
-import { Message } from '../assets/icons'
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
+import { calculateRaised } from '@/lib/utils'
+import { Category, FundInvestment, Fundraiser as IFundraiser, User } from '@prisma/client'
+import { BadgePoundSterling, Info, Stars } from 'lucide-react'
+import Link from 'next/link'
 
-export default function Fundraiser() {
+export default function Fundraiser({
+  fundraiser,
+}: Readonly<{
+  fundraiser: IFundraiser & {
+    category: Category
+    organizer: User
+    _count: { investments: number }
+    investments: FundInvestment[]
+  }
+}>) {
+  const total = calculateRaised(fundraiser)
   return (
-    <div className="flex flex-col overflow-hidden rounded-lg border bg-white lg:flex-row">
-      <div className="h-[206px] w-full lg:w-[176px]">
-        <img
-          className="h-full w-full object-cover"
-          alt="banner"
-          src="https://d2g8igdw686xgo.cloudfront.net/79511523_1713189097238160_r.jpeg"
-        />
-      </div>
+    <div className="max-w-[400px] overflow-hidden rounded-2xl border bg-white p-4 shadow lg:flex-row">
+      <Link href={`/fundraisers/${fundraiser.id}`}>
+        <div className="h-[250px] w-full overflow-hidden rounded-3xl">
+          <img className="h-full w-full object-cover" alt="banner" src={fundraiser.image} />
+        </div>
+      </Link>
 
-      <div className="flex w-full flex-1 flex-col">
-        <div className="flex-1 grid-cols-[35%,20%,20%,20%]  items-center gap-4 p-4 lg:grid">
-          <h2 className="line-clamp-3 text-xl font-bold text-[#101828]">
-            Food Truck Startup for selling Fresh Baritos & Fast food items
-          </h2>
-          <div className="mt-4 flex items-center gap-4 lg:mt-0 lg:block">
-            <h3 className="text-lg font-semibold text-gray-500 lg:font-medium">Milestone Amount</h3>
-            <p className="text-center text-lg font-bold lg:mt-4 lg:text-3xl">$25000</p>
+      <div>
+        <p className="mt-4 text-sm text-green-500">{fundraiser.category.name}</p>
+
+        <div className="mt-3 flex items-center gap-4">
+          <div className="flex h-[40px] w-[40px] items-center justify-center rounded-xl bg-[#fdeed7]">
+            <Stars color="#f6b149" className="w-[20px]" />
           </div>
-          <div className="mt-4 flex items-center gap-4 lg:mt-0 lg:block">
-            <h3 className="text-center text-lg font-medium text-gray-500">Category</h3>
-            <button className="block rounded-lg border border-gray-200 px-5 py-2 lg:mx-auto lg:mt-3">
-              Food
-            </button>
+          <div className="flex-1">
+            <Link href={`/fundraisers/${fundraiser.id}`}>
+              <h1 className="text-lg font-bold text-gray-700">{fundraiser.title}</h1>
+            </Link>
+            <p className="text-xs text-gray-400">{fundraiser.organizer.email}</p>
           </div>
-          <div className="mt-4 flex items-center gap-4 lg:mt-0 lg:block">
-            <h3 className="text-center text-lg font-medium text-gray-500">Backers</h3>
-            <div className="flex justify-center gap-2 lg:mt-4">
-              <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-              <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-              <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
+        </div>
+
+        <div className="mt-4 flex gap-4">
+          <div className="flex gap-5">
+            <div className="flex h-[40px] w-[40px] items-center justify-center rounded-xl bg-[#d8eaf5]">
+              {/* <Info className="w-[20px]" color="#3e95cc" /> */}
+              <BadgePoundSterling className="w-[20px]" color="#3e95cc" />
+            </div>
+            <div>
+              <p className="text-xs text-gray-400">Amount being raised</p>
+              <h3 className="text-xl font-semibold">£{fundraiser.amountRaising.toString()}</h3>
+            </div>
+          </div>
+          <div className="flex gap-5">
+            <div className="flex h-[40px] w-[40px] items-center justify-center rounded-xl bg-[#d8eaf5]">
+              <Info className="w-[20px]" color="#3e95cc" />
+            </div>
+            <div>
+              <p className="text-xs text-gray-400">Current investors</p>
+              <h3 className="text-xl font-semibold">{fundraiser._count.investments}</h3>
             </div>
           </div>
         </div>
-        <div className=" grid grid-cols-2 items-center justify-between border-t p-4 lg:flex">
-          <button className="flex items-center gap-3">
-            <div className="bg- flex h-[45px] w-[45px] items-center justify-center rounded-full bg-[#E0EEFD] ">
-              <Message />
-            </div>
-            <p>Message</p>
-          </button>
-          <p className="text-gray-500">Closing Date 9/11/2022</p>
-          <button className="col-span-2 mt-5 block w-full rounded-lg border border-gray-300 bg-[#541975] px-5 py-3 text-white lg:mt-0 lg:w-auto lg:bg-white lg:py-2 lg:text-black">
+        <div className="relative mt-5 h-1 w-full overflow-hidden rounded-3xl bg-gray-200">
+          <div
+            style={{
+              width: `${(total / parseFloat(fundraiser.amountRaising.toString())) * 100}%`,
+            }}
+            className="absolute left-0 top-0 h-full w-3/12 rounded-3xl bg-[#541975]"
+          ></div>
+        </div>
+        <p className="mt-1 text-xs text-gray-400">
+          {`${((total / parseFloat(fundraiser.amountRaising.toString())) * 100).toFixed(2)}%`}{' '}
+          funded
+        </p>
+        <Link href={`/fundraisers/${fundraiser.id}`}>
+          <button className="mt-5 block w-full rounded-lg border border-gray-300 bg-[#541975] px-5 py-3 text-white lg:py-2 ">
             Invest Now
           </button>
-        </div>
+        </Link>
       </div>
     </div>
   )

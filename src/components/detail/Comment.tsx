@@ -1,13 +1,7 @@
 import { formatDistanceToNow } from 'date-fns/formatDistanceToNow'
 import { User } from 'lucide-react'
 
-const Comment = ({
-  comment,
-  removeBorderTop,
-}: {
-  comment: { name: string; amount: number; comment: string; createdAt: string }
-  removeBorderTop?: boolean
-}) => {
+const Comment = ({ comment, removeBorderTop }: { comment: any; removeBorderTop?: boolean }) => {
   return (
     <div className={` my-2 ${!removeBorderTop && 'border-t'} items-center py-2 text-[#541975]`}>
       <div className="flex items-center">
@@ -15,11 +9,11 @@ const Comment = ({
           <User />
         </div>
         <h3 className="text-lg ">
-          {comment.name} donated £{comment.amount}
+          {comment.sponsor.first_name} {comment.sponsor.last_name}
         </h3>
       </div>
       <div>
-        <p className="text-gray-800">{comment.comment}</p>
+        <p className="text-gray-800">{comment.message}</p>
         <p className="text-sm">
           {formatDistanceToNow(Date.parse(comment.createdAt), { addSuffix: true })}
         </p>

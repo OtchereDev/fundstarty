@@ -6,7 +6,7 @@ import { Plus } from 'lucide-react'
 
 export default function Dashbaord() {
   return (
-    <Analystics>
+    <Analystics activeLink={'Dashboard'}>
       <main className=" flex-1  lg:grid lg:grid-cols-[70%,30%] lg:gap-5">
         <div className="overflow-y-scroll pt-32 lg:pb-20 lg:pt-10">
           <h1 className="mb-5 text-2xl font-semibold lg:mb-10 lg:text-3xl">Dashboard</h1>

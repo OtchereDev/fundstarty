@@ -7,7 +7,7 @@ const DonateItem = ({
   className,
 }: {
   borderClass?: string
-  donate: { first_name: string; last_name: string; amount: any; createdAt: any }
+  donate: { User: { first_name: string; last_name: string }; amount: any; createdAt: any }
   className?: string
 }) => {
   return (
@@ -16,11 +16,11 @@ const DonateItem = ({
         <User />
       </div>
       <div>
-        <h3 className="text-lg">
-          {donate.first_name} {donate.last_name}
+        <h3 className="font-semibold">
+          {donate.User.first_name} {donate.User.last_name}
         </h3>
         <div className="flex items-center">
-          <span className="mr-2 text-lg">${donate.amount}</span>
+          <span className="mr-2">${donate.amount}</span>
 
           <span className="text-sm">
             {formatDistanceToNow(Date.parse(donate.createdAt), { addSuffix: false })}

@@ -16,7 +16,7 @@ import {
 } from '../ui/dropdown-menu'
 import NavDrawer from './NavDrawer'
 
-export default function NavBar() {
+export default function NavBar({ activeLink }: { activeLink?: string }) {
   const { authenticated, login, logout } = useAuth()
   return (
     <nav className="fixed left-0 top-0 z-10 w-full bg-white shadow">
@@ -26,13 +26,19 @@ export default function NavBar() {
             <Logo />
           </Link>
           <Link href={'/dashboard'}>
-            <button className="nav-button  bg-[#D2DEEB]">Dashboard</button>
+            <button className={`nav-button ${activeLink == 'Dashboard' ? 'bg-[#D2DEEB]' : ''}`}>
+              Dashboard
+            </button>
           </Link>
           <Link href={'/your-campaign'}>
-            <button className="nav-button">Your campaign</button>
+            <button className={`nav-button ${activeLink == 'YourCampaign' ? 'bg-[#D2DEEB]' : ''}`}>
+              Your campaign
+            </button>
           </Link>
           <Link href={'/fundraisers'}>
-            <button className="nav-button">Fundraiser</button>
+            <button className={`nav-button ${activeLink == 'Fundraisers' ? 'bg-[#D2DEEB]' : ''}`}>
+              Fundraiser
+            </button>
           </Link>
         </div>
 

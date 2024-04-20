@@ -1,36 +1,40 @@
 import Description from '@/components/detail/Description'
 import Header from '@/components/detail/Header'
-import Dashboard from '@/components/layouts/dashboard'
+import Analystics from '@/components/layouts/analytics'
 import pangea, { AUTHN_TOKEN } from '@/constants/pangea'
 import { prisma } from '@/lib/prismaClient'
-import { FundInvestment, Fundraiser } from '@prisma/client'
+import { Category, Comment, FundInvestment, Fundraiser, User } from '@prisma/client'
 import { GetServerSideProps } from 'next'
 import { AuthNService } from 'pangea-node-sdk'
 
 export default function Detail({
   fundraiser,
-}: {
+}: Readonly<{
   fundraiser: Fundraiser & {
-    investments: (FundInvestment & { first_name: string; last_name: string })[]
+    investments: (FundInvestment & { User: { first_name: string; last_name: string } })[]
+    category: Category
+    organizer: User
+    comments: Comment[]
   }
-}) {
+}>) {
+  console.log({ fundraiser })
   return (
-    <Dashboard title={fundraiser?.title ?? ''}>
+    <Analystics activeLink="Fundraisers" title={fundraiser?.title ?? ''}>
       <main className="pb-10">
         <Header fundraiser={fundraiser} />
-        <Description />
+        <Description fundraiser={fundraiser} />
       </main>
-    </Dashboard>
+    </Analystics>
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req, params }) => {
-  const { uuid } = params as any
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const { uid } = query as any
 
   const auth = new AuthNService(AUTHN_TOKEN, pangea)
 
   const fundraiser = await prisma.fundraiser.findFirst({
-    where: { id: uuid as string },
+    where: { id: uid as string },
     include: {
       category: true,
       organizer: true,
@@ -69,6 +73,23 @@ export const getServerSideProps: GetServerSideProps = async ({ req, params }) =>
     }
 
     fundraiser.comments = comments
+  }
+
+  if (fundraiser?.investments.length) {
+    const investments = []
+    for (let investment of fundraiser.investments) {
+      const newComment = investment
+
+      const sponsor = await auth.user.profile.getProfile({
+        email: investment?.User?.email as string,
+      })
+      const profile = sponsor.result.profile
+      newComment.User = { ...newComment.User, ...(profile as any) }
+      console.log(newComment)
+      investments.push(newComment)
+    }
+
+    fundraiser.investments = investments
   }
 
   return {

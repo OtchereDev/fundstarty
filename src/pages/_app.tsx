@@ -1,6 +1,7 @@
 import '@/styles/globals.css'
 import { AuthProvider } from '@pangeacyber/react-auth'
 import type { AppProps } from 'next/app'
+import NextNProgress from 'nextjs-progressbar'
 
 export default function App({ Component, pageProps }: AppProps) {
   const hostedLoginURL = process?.env?.NEXT_PUBLIC_AUTHN_HOSTED_LOGIN_URL ?? ''
@@ -17,6 +18,7 @@ export default function App({ Component, pageProps }: AppProps) {
       redirectUri={redirectUrl}
       config={authConfig}
     >
+      <NextNProgress color="#541975" />
       <Component {...pageProps} />
     </AuthProvider>
   )

@@ -1,6 +1,6 @@
 import { Search } from '@/components/assets/icons'
 import Fundraiser from '@/components/dashboard/Fundraiser'
-import Dashboard from '@/components/layouts/dashboard'
+import Analystics from '@/components/layouts/analytics'
 import {
   Select,
   SelectContent,
@@ -9,10 +9,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { prisma } from '@/lib/prismaClient'
+import { Category, FundInvestment, Fundraiser as IFundraiser, User } from '@prisma/client'
+import { GetServerSideProps } from 'next'
 
-export default function Index() {
+export default function Index({
+  fundraisers,
+  categories,
+}: {
+  fundraisers: (IFundraiser & {
+    category: Category
+    organizer: User
+    _count: { investments: number }
+    investments: FundInvestment[]
+  })[]
+  categories: Category[]
+}) {
   return (
-    <Dashboard title="Available Investment opportunity">
+    <Analystics activeLink="Fundraisers" title="Available Investment opportunity">
       <section className="px-4 pb-14 pt-32 lg:mb-20">
         <div className="flex flex-col items-center justify-between lg:flex-row">
           <div>
@@ -22,35 +36,32 @@ export default function Index() {
             </p>
           </div>
 
-          <div className="mt-5 flex w-[377px] items-center gap-2 overflow-hidden rounded-lg bg-white px-4 py-2.5 lg:mt-0">
-            <input className=" flex-1 text-lg outline-none" placeholder="Search" />
+          <div className="mt-5 flex w-[377px] items-center gap-2 overflow-hidden rounded-lg bg-[#f5f6f7] px-4 py-2.5 lg:mt-0">
+            <input className=" flex-1 bg-transparent text-lg outline-none" placeholder="Search" />
             <Search />
           </div>
         </div>
 
         <section className="mt-10 flex items-center justify-between lg:mt-16">
           <Select>
-            <SelectTrigger className="w-full lg:w-[300px]">
+            <SelectTrigger className="w-full bg-[#f5f6f7] lg:w-[300px]">
               <SelectValue placeholder="Category" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="apple">Apple</SelectItem>
-                <SelectItem value="banana">Banana</SelectItem>
-                <SelectItem value="blueberry">Blueberry</SelectItem>
-                <SelectItem value="grapes">Grapes</SelectItem>
-                <SelectItem value="pineapple">Pineapple</SelectItem>
+                {categories.map((category) => (
+                  <SelectItem key={category.id} value={category.id.toString()}>
+                    {category.name}
+                  </SelectItem>
+                ))}
               </SelectGroup>
             </SelectContent>
           </Select>
-          <p className="hidden text-2xl font-semibold lg:block">
-            <span className="text-[#3A7519]">Total Balance</span> $50,000
-          </p>
         </section>
 
-        <section className="mt-20 flex flex-col gap-10">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <Fundraiser key={i} />
+        <section className="mt-20 flex flex-col gap-10 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:gap-y-10 ">
+          {fundraisers?.map((fundraiser) => (
+            <Fundraiser fundraiser={fundraiser} key={fundraiser.id} />
           ))}
         </section>
 
@@ -58,8 +69,30 @@ export default function Index() {
           Start a Fundstart
         </button>
       </section>
-    </Dashboard>
+    </Analystics>
   )
 }
 
-// export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {}
+export const getServerSideProps: GetServerSideProps = async ({}) => {
+  const fundraisers = await prisma.fundraiser.findMany({
+    include: {
+      _count: {
+        select: {
+          investments: true,
+        },
+      },
+      investments: true,
+      category: true,
+      organizer: true,
+    },
+  })
+
+  const categories = await prisma.category.findMany()
+
+  return {
+    props: {
+      fundraisers: JSON.parse(JSON.stringify(fundraisers)),
+      categories: JSON.parse(JSON.stringify(categories)),
+    },
+  }
+}
