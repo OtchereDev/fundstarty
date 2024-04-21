@@ -48,7 +48,7 @@ export default function YourCampaign({ popular, fundraisers, category }: Readonl
           </button>
         </div>
 
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-y-10 lg:mt-12 lg:justify-between lg:gap-y-16">
+        <div className="mt-10 flex flex-wrap justify-center gap-y-10 lg:mt-12 lg:justify-between lg:gap-y-16">
           {fundraisers.map((fund) => (
             <CampaignCard fundraiser={fund} key={fund.id} />
           ))}
@@ -86,6 +86,7 @@ export default function YourCampaign({ popular, fundraisers, category }: Readonl
             <CampaignCard fundraiser={fund} key={fund.id} />
           ))}
         </div>
+        {popular.length == 0 && <Empty />}
       </section>
     </Dashboard>
   )

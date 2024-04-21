@@ -1,3 +1,9 @@
+import cookie from 'cookie'
+import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
+
+import useChat from '@/hooks/useChat'
+
 import {
   Drawer,
   DrawerClose,
@@ -8,65 +14,96 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer'
-import { Send, Wand, X } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { Cursor } from '../assets/icons'
+import { Bot, Send, X } from 'lucide-react'
 import { Textarea } from '../ui/textarea'
+import AIMessage from './AIMessage'
+import EllipseLoader from './EllipseLoader'
 
 export default function AiDrawer({ children }: Readonly<{ children: React.ReactNode }>) {
-  const [completedTyping, setCompletedTyping] = useState(false)
-  const [displayResponse, setDisplayResponse] = useState('')
+  const [open, setOpen] = useState(false)
+  const [authKey, setAuthKey] = useState('')
+  const [conversations, setConversations] = useState<{ role: string; content: string }[]>([])
+  const { addMessage, isLoadingAnswer, messages, isInitialized } = useChat({ authKey, open })
+  const [message, setMessage] = useState('')
 
   useEffect(() => {
-    setCompletedTyping(false)
-
-    let i = 0
-    // const stringResponse = chatHistory[chatHistory.length - 1].content
-    const stringResponse =
-      'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officiis, alias odit delectus reiciendis neque ipsam quis libero dolorum eaque dolore magni commodi dignissimos. Maxime culpa, veritatis accusantium perferendis omnis molestiae!'
-
-    const intervalId = setInterval(() => {
-      setDisplayResponse(stringResponse.slice(0, i))
-
-      i++
-
-      if (i > stringResponse.length) {
-        clearInterval(intervalId)
-        setCompletedTyping(true)
-      }
-    }, 20)
-
-    return () => clearInterval(intervalId)
+    const cookies = document.cookie
+    const result = cookie.parse(cookies)
+    if (result.fundstartAuth) {
+      setAuthKey(result.fundstartAuth)
+    }
   }, [])
+
+  useEffect(() => {
+    if (messages.length > 0) setConversations((curr) => [...curr, messages[0]])
+  }, [messages])
+
+  const sendMessage = async () => {
+    if (!message) return toast.error('Error', { description: 'message cannot be empty' })
+    const resp = await addMessage(message)
+    if (resp) {
+      setMessage('')
+    }
+  }
+
   return (
-    <Drawer>
+    <Drawer dismissible onOpenChange={setOpen} open={open}>
       <DrawerTrigger asChild>{children}</DrawerTrigger>
       <DrawerContent>
         <div className="mx-auto w-full max-w-[1280px] px-5">
           <DrawerHeader>
-            <DrawerTitle>Aisha (Investment assistant AI)</DrawerTitle>
-            <DrawerDescription>Set your daily activity goal.</DrawerDescription>
+            <DrawerTitle>Debby (Investment assistant AI)</DrawerTitle>
+            <DrawerDescription>
+              Here to make your investment journey on Fundstart easy
+            </DrawerDescription>
           </DrawerHeader>
           <div className="flex h-[450px] flex-col">
-            <div className="flex-1">
-              <div className="flex gap-5">
-                <div className="flex h-[50px] w-[50px] items-center justify-center rounded-full bg-gray-100 shadow-md">
-                  <Wand />
-                </div>
-                <div className="flex-1 rounded-xl bg-gray-200 p-3">
-                  <span>
-                    {displayResponse}
-                    {!completedTyping && <Cursor />}
-                  </span>
+            {!isInitialized ? (
+              <div>
+                <p className="mt-5 text-center text-xl font-semibold">
+                  Please wait whiles I initialize myself
+                </p>
+                <Bot className="mx-auto h-[140px] w-[140px] text-[#533075]" />
+                <div className="flex justify-center">
+                  <EllipseLoader />
                 </div>
               </div>
-            </div>
-            <div className="flex items-end gap-3">
-              <Textarea className="flex-1" placeholder="Type your message here." />
-              <button className="rounded-xl bg-[#541975] px-3 py-3 text-white">
-                <Send />
-              </button>
-            </div>
+            ) : (
+              <>
+                <div className="flex-1 overflow-scroll pb-10">
+                  {conversations.map((convo, idx) =>
+                    convo.role === 'assistant' ? (
+                      <AIMessage key={idx} message={convo.content} />
+                    ) : (
+                      <div
+                        key={idx}
+                        className="mb-4 ml-auto rounded-lg bg-gray-200 p-4 lg:max-w-[70%]"
+                      >
+                        {convo.content}
+                      </div>
+                    )
+                  )}
+                </div>
+
+                {isLoadingAnswer && <EllipseLoader />}
+                <div className="flex items-end gap-3">
+                  <Textarea
+                    disabled={isLoadingAnswer}
+                    className="flex-1"
+                    value={message}
+                    placeholder="Type your message here."
+                    onChange={(e) => setMessage(e.target.value)}
+                  />
+                  <button
+                    disabled={isLoadingAnswer}
+                    className="rounded-xl bg-[#541975] px-3 py-3 text-white disabled:bg-opacity-90"
+                    onClick={sendMessage}
+                  >
+                    <Send />
+                  </button>
+                </div>
+              </>
+            )}
           </div>
           <DrawerFooter className="px-0">
             <DrawerClose asChild>
