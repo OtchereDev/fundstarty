@@ -12,6 +12,7 @@ import Logo3 from '@/components/assets/images/logo-3.jpg'
 import Logo4 from '@/components/assets/images/logo-4.webp'
 import Logo5 from '@/components/assets/images/logo-5.png'
 import Logo6 from '@/components/assets/images/logo-6.webp'
+import Link from 'next/link'
 
 export default function Home() {
   return (
@@ -27,12 +28,16 @@ export default function Home() {
               With our plaform, you can directly invest and raise capital to grow your startup
             </p>
             <div className="mt-10 flex flex-col gap-4  lg:flex-row">
-              <button className="rounded-xl bg-[#533075] px-6 py-3 text-white">
-                Raise capital
-              </button>
-              <button className="rounded-xl border-2 border-[#533075] px-6 py-3 font-bold text-[#533075]">
-                Invest now
-              </button>
+              <Link className="block" href={'/fundraisers'}>
+                <button className="w-full rounded-xl border-2 border-[#533075] bg-[#533075] px-6 py-3 text-white lg:w-auto">
+                  Raise capital
+                </button>
+              </Link>
+              <Link className="block" href={'/fundraisers'}>
+                <button className="w-full rounded-xl border-2 border-[#533075] px-6 py-3 font-bold text-[#533075] lg:w-auto">
+                  Invest now
+                </button>
+              </Link>
             </div>
           </div>
           <div className="order-1 flex flex-1 justify-center lg:order-2">
