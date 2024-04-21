@@ -1,4 +1,8 @@
+import cookie from 'cookie'
+import { GetServerSideProps } from 'next'
+
 import { DownwardTrend, UpwardTrending } from '@/components/assets/icons'
+import { AddWalletDialog } from '@/components/dashboard/AddCard'
 import CardStack from '@/components/dashboard/CardStack'
 import LineChart from '@/components/dashboard/LineChart'
 import Analystics from '@/components/layouts/analytics'
@@ -132,10 +136,12 @@ export default function Dashbaord() {
             <div className="   border-b pb-14 lg:p-5 lg:pb-14">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-bold">My Cards</h2>
-                <button className="flex gap-1 font-medium">
-                  <Plus className="w-4" />
-                  Add Card
-                </button>
+                <AddWalletDialog>
+                  <button className="flex gap-1 font-medium">
+                    <Plus className="w-4" />
+                    Add Card
+                  </button>
+                </AddWalletDialog>
               </div>
               <div>
                 <CardStack />
@@ -180,4 +186,29 @@ export default function Dashbaord() {
       </main>
     </Analystics>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  if (!req.headers.cookie) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+
+  let { fundstartAuth } = cookie.parse(req.headers.cookie)
+  if (!fundstartAuth)
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  return {
+    props: {
+      fundstartAuth,
+    },
+  }
 }
