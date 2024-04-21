@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
+import { SecureAudut } from '@/constants/pangea'
 import { prisma } from '@/lib/prismaClient'
 
 export default async function CreateCategory(req: NextApiRequest, res: NextApiResponse) {
@@ -8,9 +9,14 @@ export default async function CreateCategory(req: NextApiRequest, res: NextApiRe
 
     if (!name) return res.status(400).json({ message: 'Category name is required' })
 
-    await prisma.category.create({ data: { name } })
+    const category = await prisma.category.create({ data: { name } })
 
-    // TODO: log here
+    await SecureAudut.log({
+      action: 'category',
+      target: category.id,
+      status: 'success',
+      message: `Successfully created category ${category.id}`,
+    })
     return res.status(200).json({ message: 'Category created successfully' })
   } else {
     return res.status(403).json({ message: 'Method not allowed' })

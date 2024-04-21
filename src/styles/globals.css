@@ -94,3 +94,22 @@
     @apply hidden rounded-md text-[#344054] lg:block  lg:px-2 lg:py-1 lg:hover:bg-gray-100;
   }
 }
+
+.cursor {
+  display: inline-block;
+  width: 1ch;
+  animation: flicker 0.5s infinite;
+  margin-bottom: 4px;
+}
+
+@keyframes flicker {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
+import { SecureAudut } from '@/constants/pangea'
 import { prisma } from '@/lib/prismaClient'
 
 export default async function DeletCategory(req: NextApiRequest, res: NextApiResponse) {
@@ -14,7 +15,12 @@ export default async function DeletCategory(req: NextApiRequest, res: NextApiRes
       where: { id },
     })
 
-    // TODO: log here
+    await SecureAudut.log({
+      action: 'category',
+      target: req.query.id as string,
+      status: 'success',
+      message: `Successfully deleted category ${id}`,
+    })
     return res.json({ message: 'Successfully deleted' })
   } else {
     return res.status(403).json({ message: 'Method not allowed' })

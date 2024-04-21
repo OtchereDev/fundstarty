@@ -9,6 +9,7 @@ export default async function CheckUser(req: NextApiRequest, res: NextApiRespons
   if (req.method === 'GET') {
     if (!(await validToken(req))) return res.status(400).json({ message: 'Unauthorized' })
     const payload = getJWTPayload(getBearerToken(req))
+
     const auth = new AuthNService(AUTHN_TOKEN, pangea)
 
     const data = await auth.user.profile.getProfile({

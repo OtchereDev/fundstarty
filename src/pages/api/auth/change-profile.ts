@@ -2,7 +2,7 @@ import Joi from 'joi'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { AuthNService } from 'pangea-node-sdk'
 
-import pangea, { AUTHN_TOKEN } from '@/constants/pangea'
+import pangea, { AUTHN_TOKEN, SecureAudut } from '@/constants/pangea'
 import { getBearerToken, validToken } from '@/lib/auth'
 import { getJWTPayload } from '@/lib/decodeJwt'
 
@@ -32,6 +32,14 @@ export default async function ChangePassword(req: NextApiRequest, res: NextApiRe
         last_name: value.lastName,
         phone: value.phone,
       },
+    })
+
+    await SecureAudut.log({
+      action: 'update_profile',
+      actor: payload.email,
+      target: payload.email,
+      status: 'success',
+      message: `User successfully updated profile`,
     })
 
     return res.json({ message: 'Successfully updated profile' })

@@ -14,6 +14,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu'
+import AiDrawer from './AiDrawer'
 import NavDrawer from './NavDrawer'
 
 export default function NavBar({ activeLink }: { activeLink?: string }) {
@@ -50,9 +51,11 @@ export default function NavBar({ activeLink }: { activeLink?: string }) {
           </NavDrawer>
           {authenticated ? (
             <>
-              <button className="hidden rounded-lg border px-3 py-1.5 lg:block">
-                <Zap />
-              </button>
+              <AiDrawer>
+                <button className="hidden rounded-lg border px-3 py-1.5 lg:block">
+                  <Zap />
+                </button>
+              </AiDrawer>
 
               <Link href={'/account/profile'}>
                 <button className=" hidden lg:block">

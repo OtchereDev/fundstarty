@@ -1,3 +1,4 @@
+import { SecureAudut } from '@/constants/pangea'
 import { prisma } from '@/lib/prismaClient'
 
 import { NextApiRequest, NextApiResponse } from 'next'
@@ -39,11 +40,24 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
             amount: donationAmount,
           },
         })
+
+        await SecureAudut.log({
+          action: 'payment_intent.succeeded',
+          target: 'payment',
+          status: 'success',
+          message: `Successfully investment for fundraiser ${intent.fundraiserId} by ${intent.userId}`,
+        })
       } else {
         throw new Error('errored')
       }
       return res.json({ received: true, event })
     } catch (err: any) {
+      await SecureAudut.log({
+        action: 'payment_intent.succeeded',
+        target: 'payment',
+        status: 'error',
+        message: `Error investment for fundraiser ${err.message}`,
+      })
       res.status(400).json({
         message: err.message,
       })

@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { RedactService, VaultService } from 'pangea-node-sdk'
 import { v4 as uuid } from 'uuid'
 
-import pangea from '@/constants/pangea'
+import pangea, { SecureAudut } from '@/constants/pangea'
 import { CardRegex, NumberStringRegex } from '@/constants/regex'
 import { getBearerToken, validateToken } from '@/lib/auth'
 import { getUserEmail } from '@/lib/decodeJwt'
@@ -50,7 +50,7 @@ export default async function WalletCreate(req: NextApiRequest, res: NextApiResp
         cardNumber: response.result.redacted_text,
       }
 
-      await prisma.wallet.create({
+      const wallet = await prisma.wallet.create({
         data: {
           user: {
             connect: { id: user?.id as string },
@@ -59,11 +59,22 @@ export default async function WalletCreate(req: NextApiRequest, res: NextApiResp
         },
       })
 
-      // TODO: log here
+      await SecureAudut.log({
+        action: 'wallet',
+        target: 'wallet',
+        status: 'success',
+        message: `Successfully created for wallet ${wallet.id} by ${wallet.userId}`,
+      })
       return res.json({
         message: 'Successfully added card',
       })
     } else {
+      await SecureAudut.log({
+        action: 'wallet',
+        target: 'wallet',
+        status: 'error',
+        message: `Error creating wallet ${user?.id} by: ${error}`,
+      })
       return res.status(400).json({ message: 'Validation error', errors: error })
     }
   } else {

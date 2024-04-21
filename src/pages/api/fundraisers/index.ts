@@ -2,6 +2,7 @@ import { v2 as cloudinary } from 'cloudinary'
 import joi from 'joi'
 import { NextApiRequest, NextApiResponse } from 'next'
 
+import { SecureAudut } from '@/constants/pangea'
 import { getBearerToken, validateToken } from '@/lib/auth'
 import { getUserEmail } from '@/lib/decodeJwt'
 import { prisma } from '@/lib/prismaClient'
@@ -81,13 +82,20 @@ export default async function Fundraisers(req: NextApiRequest, res: NextApiRespo
 
     const catId = value.categoryId
     delete value.categoryId
-    await prisma.fundraiser.create({
+    const f = await prisma.fundraiser.create({
       data: {
         ...value,
         image: imgResult.url,
         category: { connect: { id: catId } },
         organizer: { connect: { id: user?.id as string } },
       },
+    })
+
+    await SecureAudut.log({
+      action: 'fundraiser_create',
+      target: 'fundraiser',
+      status: 'success',
+      message: `Successfully created fundraiser ${f.id} by ${user?.email}`,
     })
 
     return res.json({ message: 'Successfully' })

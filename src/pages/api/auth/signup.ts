@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { AuthN, AuthNService } from 'pangea-node-sdk'
 
-import PangeaConfig, { AUTHN_TOKEN } from '@/constants/pangea'
+import PangeaConfig, { AUTHN_TOKEN, SecureAudut } from '@/constants/pangea'
 import { EmailRegex, PasswordRegex } from '@/constants/regex'
 import { prisma } from '@/lib/prismaClient'
 
@@ -69,7 +69,14 @@ export default async function Signup(req: NextApiRequest, res: NextApiResponse) 
                 },
               })
             } catch (error) {}
-            // TODO: log here
+
+            await SecureAudut.log({
+              action: 'signup',
+              actor: data.email,
+              status: 'success',
+              message: `Successfully signed up`,
+              source: 'mobile',
+            })
             return res.json({ message: 'Successfully sign up...Please log in' })
           }
         }
@@ -77,7 +84,13 @@ export default async function Signup(req: NextApiRequest, res: NextApiResponse) 
         throw new Error('Unathenticated')
       }
     } catch (error: any) {
-      console.log(error)
+      await SecureAudut.log({
+        action: 'signup',
+        actor: data.email,
+        status: 'error',
+        message: `Error signing up: ${error?.summary ?? error.message ?? 'Unexpected error occurred'}`,
+        source: 'mobile',
+      })
       return res.status(400).json({
         message: error?.summary ?? 'Unexpected error occurred',
         errors: error?.errors ?? [],

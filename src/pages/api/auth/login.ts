@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { AuthN, AuthNService } from 'pangea-node-sdk'
+import { AuthN, AuthNService, UserIntelService } from 'pangea-node-sdk'
 
-import PangeaConfig, { AUTHN_TOKEN } from '@/constants/pangea'
+import { AUTHN_TOKEN, default as PangeaConfig, default as pangea } from '@/constants/pangea'
 import { EmailRegex } from '@/constants/regex'
 
 export default async function Login(req: NextApiRequest, res: NextApiResponse) {
@@ -12,6 +12,19 @@ export default async function Login(req: NextApiRequest, res: NextApiResponse) {
     }
 
     try {
+      const userIntel = new UserIntelService(process.env.NEXT_PANGEA_UserIntel as string, pangea)
+
+      const response = await userIntel.userBreached({
+        email: req.body.email,
+        verbose: true,
+        raw: true,
+      })
+
+      if (!response.success || response.result.data.found_in_breach) {
+        // prevent logging in when user details has been breached
+        throw new Error('Unathenticated')
+      }
+
       const auth = new AuthNService(AUTHN_TOKEN, PangeaConfig)
       const startResponse = await auth.flow.start({
         email: req.body.email,

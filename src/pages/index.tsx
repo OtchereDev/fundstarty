@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import Marquee from 'react-fast-marquee'
 
 import Hero from '@/components/assets/undraw_environment_iaus.svg'
@@ -12,7 +13,6 @@ import Logo3 from '@/components/assets/images/logo-3.jpg'
 import Logo4 from '@/components/assets/images/logo-4.webp'
 import Logo5 from '@/components/assets/images/logo-5.png'
 import Logo6 from '@/components/assets/images/logo-6.webp'
-import Link from 'next/link'
 
 export default function Home() {
   return (

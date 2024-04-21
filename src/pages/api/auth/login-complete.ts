@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { AuthN, AuthNService } from 'pangea-node-sdk'
 
-import pangea, { AUTHN_TOKEN } from '@/constants/pangea'
+import pangea, { AUTHN_TOKEN, SecureAudut } from '@/constants/pangea'
 import { prisma } from '@/lib/prismaClient'
 
 export default async function Login(req: NextApiRequest, res: NextApiResponse) {
@@ -38,10 +38,26 @@ export default async function Login(req: NextApiRequest, res: NextApiResponse) {
           },
         })
       }
-      // TODO: log here
+
+      await SecureAudut.log({
+        action: 'login_complete',
+        actor: response.result.refresh_token.email,
+        status: 'success',
+        message: `User successfully logged in`,
+        source: 'mobile',
+      })
+
       return res.json({ messge: 'Successful', response: JSON.parse(response.toJSON()) })
     } else {
-      throw new Error('unauthenticated')
+      await SecureAudut.log({
+        action: 'login_complete',
+        actor: 'Unknown',
+        status: 'error',
+        message: `Error logging in : ${codeUpdate.summary}`,
+        source: 'mobile',
+      })
+
+      return res.status(401).json({ messge: 'Unauthenticated' })
     }
   } else {
     return res.status(403).json({ message: 'Method not allowed' })
