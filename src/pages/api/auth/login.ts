@@ -20,6 +20,7 @@ export default async function Login(req: NextApiRequest, res: NextApiResponse) {
         raw: true,
       })
 
+      console.log(response.result)
       if (!response.success || response.result.data.found_in_breach) {
         // prevent logging in when user details has been breached
         throw new Error('Unathenticated')
