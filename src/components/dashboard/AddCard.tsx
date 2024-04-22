@@ -11,13 +11,15 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { formatExpiryDate } from '@/lib/formatExpiryDate'
 import { creditCardType } from '@/lib/utils'
+import { Wallet } from '@prisma/client'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
 export function AddWalletDialog({
   children,
   authKey,
-}: Readonly<{ children: React.ReactNode; authKey: string }>) {
+  onSuccess,
+}: Readonly<{ children: React.ReactNode; authKey: string; onSuccess: (wallet: Wallet) => void }>) {
   const [cvv, setCvv] = useState('')
   const [cardNumber, setCardNumber] = useState('')
   const [expiryDate, setExpiryDate] = useState('')
@@ -72,6 +74,7 @@ export function AddWalletDialog({
     if (req.ok) {
       const response = await req.json()
       setOpen(false)
+      onSuccess(response.wallet)
       return toast.success('Sucessfully created', { description: 'Successfully created wallet' })
     } else {
       return toast.error('Error creating', { description: 'There was an error creating' })
