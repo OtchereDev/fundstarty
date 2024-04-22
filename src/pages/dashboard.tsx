@@ -4,7 +4,6 @@ import { GetServerSideProps } from 'next'
 import { AuthNService, PangeaConfig } from 'pangea-node-sdk'
 import { useState } from 'react'
 
-import { AUTHN_TOKEN } from '@/constants/pangea'
 import { getJWTPayload } from '@/lib/decodeJwt'
 import { prisma } from '@/lib/prismaClient'
 import { FundInvestment, Fundraiser, Transaction, Wallet } from '@prisma/client'
@@ -260,7 +259,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const pangea = new PangeaConfig({ domain: process.env.NEXT_PUBLIC_PANGEA_DOMAIN })
 
   const payload = getJWTPayload(fundstartAuth)
-  const auth = new AuthNService(AUTHN_TOKEN, pangea)
+  const auth = new AuthNService(process.env.NEXT_AUTHN_TOKEN ?? '', pangea)
 
   const email = payload.email as string
   const data = await auth.user.profile.getProfile({
