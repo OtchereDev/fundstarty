@@ -22,7 +22,7 @@ export default async function WalletCreate(req: NextApiRequest, res: NextApiResp
     if (!NumberStringRegex.test(body.cvv) || body.cvv?.length < 3 || body.cvv?.length > 4) {
       error.push('Provide a valid cvv')
     }
-    if (/^(0[1-9]|1[0-2])\/\d{4}$/.test(body.expiryDate)) {
+    if (!/^(0[1-9]|1[0-2])\/\d{4}$/.test(body.expiryDate)) {
       error.push('provide a valid expiry date')
     }
     if (!body.cardHolder?.length) {
