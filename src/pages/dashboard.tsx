@@ -256,6 +256,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
       },
     }
 
+  console.log(process.env)
   const pangea = new PangeaConfig({ domain: process.env.NEXT_PUBLIC_PANGEA_DOMAIN })
 
   const payload = getJWTPayload(fundstartAuth)
