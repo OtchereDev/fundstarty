@@ -27,8 +27,8 @@ export default function AIMessage({ message }: Readonly<{ message: string }>) {
   }, [message])
 
   return (
-    <div className="mb-4 flex gap-5 lg:max-w-[70%]">
-      <div className=" flex h-[50px] w-[50px] items-center justify-center rounded-full bg-gray-100 shadow-md">
+    <div className="mb-4 flex flex-col gap-2 lg:max-w-[70%] lg:flex-row lg:gap-5">
+      <div className="hidden h-[50px] w-[50px] items-center justify-center rounded-full bg-gray-100 shadow-md lg:flex">
         <Wand />
       </div>
       <div className="flex-1 rounded-xl bg-gray-200 p-3">
@@ -37,6 +37,7 @@ export default function AIMessage({ message }: Readonly<{ message: string }>) {
           {!completedTyping && <Cursor />}
         </span>
       </div>
+      <p className="text-xs text-gray-500 lg:hidden">From Debby</p>
     </div>
   )
 }

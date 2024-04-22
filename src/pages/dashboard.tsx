@@ -152,7 +152,7 @@ export default function Dashbaord({
                               {transaction.transType}
                             </td>
                             <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                              £{transaction.amount.toString()}
+                              £{formatMoney(parseFloat(transaction.amount.toString()))}
                             </td>
                             <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                               {dayjs(transaction.createdAt.toString()).format('DD MMM, YYYY')}

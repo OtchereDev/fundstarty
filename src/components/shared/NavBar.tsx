@@ -1,5 +1,6 @@
 import { useAuth } from '@pangeacyber/react-auth'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { Bars, CirclePerson, Cog, Logo, Zap } from '../assets/icons'
 import {
   DropdownMenu,
@@ -17,8 +18,9 @@ import {
 import AiDrawer from './AiDrawer'
 import NavDrawer from './NavDrawer'
 
-export default function NavBar({ activeLink }: { activeLink?: string }) {
+export default function NavBar({ activeLink }: Readonly<{ activeLink?: string }>) {
   const { authenticated, login, logout } = useAuth()
+  const router = useRouter()
   return (
     <nav className="fixed left-0 top-0 z-10 w-full bg-white shadow">
       <div className="flex items-center justify-between  px-4 py-5 lg:mx-auto lg:max-w-[1280px]">
@@ -95,7 +97,14 @@ export default function NavBar({ activeLink }: { activeLink?: string }) {
                   </DropdownMenuGroup>
 
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={logout}>Log out</DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      router.push('/')
+                      logout()
+                    }}
+                  >
+                    Log out
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </>

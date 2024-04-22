@@ -1,35 +1,74 @@
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerFooter,
-  DrawerTrigger,
-} from '@/components/ui/drawer'
+import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer'
+import { useAuth } from '@pangeacyber/react-auth'
 import Link from 'next/link'
+import Router from 'next/router'
+import AiDrawer from './AiDrawer'
 
 export default function NavDrawer({ children }: Readonly<{ children: React.ReactNode }>) {
-  const user = null
+  const { authenticated, login, logout } = useAuth()
+
   return (
     <Drawer>
       <DrawerTrigger asChild>{children}</DrawerTrigger>
       <DrawerContent>
-        <div className="mx-auto w-full max-w-sm px-4">
-          <div className="mb-3 text-right text-xl"></div>
+        <div className="mx-auto flex h-full w-full max-w-sm flex-col px-4">
           <div>
-            {user ? (
-              <span className="mr-2 cursor-pointer text-lg hover:text-gray-500">Profile</span>
+            {authenticated ? (
+              <>
+                <Link href={'/dashboardd'}>
+                  <p className="mb-4 mr-2 cursor-pointer text-xl font-semibold text-[#541975] hover:text-gray-500">
+                    Dashboard
+                  </p>
+                </Link>
+                <Link href={'/your-campaign'}>
+                  <p className="mb-4 mr-2 cursor-pointer text-xl font-semibold text-[#541975] hover:text-gray-500">
+                    Your Campaign
+                  </p>
+                </Link>
+                <Link href={'/fundraisers'}>
+                  <p className="mb-4 mr-2 cursor-pointer text-xl font-semibold text-[#541975] hover:text-gray-500">
+                    Fundraiser
+                  </p>
+                </Link>
+
+                <AiDrawer>
+                  <p className="mb-4 mr-2 cursor-pointer text-xl font-semibold text-[#541975] hover:text-gray-500">
+                    Chat with Debby (AI Assistant)
+                  </p>
+                </AiDrawer>
+
+                <Link href={'/account/profile'}>
+                  <p className="mb-4 mr-2 cursor-pointer text-xl font-semibold text-[#541975] hover:text-gray-500">
+                    Profile Settings
+                  </p>
+                </Link>
+
+                <button
+                  onClick={() => {
+                    logout()
+                    Router.push('/')
+                  }}
+                  className="mb-4 mr-2 cursor-pointer text-xl font-semibold text-[#541975] hover:text-gray-500"
+                >
+                  Profile Settings
+                </button>
+              </>
             ) : (
               <>
-                <Link href={'/sign-in'}>
-                  <p className="mb-4 mr-2 cursor-pointer text-xl font-semibold text-[#541975] hover:text-gray-500">
-                    Sign in
-                  </p>
-                </Link>
-                <Link href={'/sign-up'}>
-                  <p className="mb-4 mr-2 cursor-pointer text-xl font-semibold text-[#541975] hover:text-gray-500">
-                    Sign up
-                  </p>
-                </Link>
+                <p
+                  onClick={login}
+                  className="mb-4 mr-2 cursor-pointer text-xl font-semibold text-[#541975] hover:text-gray-500"
+                >
+                  Sign in
+                </p>
+
+                <p
+                  onClick={login}
+                  className="mb-4 mr-2 cursor-pointer text-xl font-semibold text-[#541975] hover:text-gray-500"
+                >
+                  Sign up
+                </p>
+
                 <Link href={'/'}>
                   <p className="mb-4 mr-2 cursor-pointer text-xl font-semibold text-[#541975] hover:text-gray-500">
                     About Us
@@ -44,11 +83,6 @@ export default function NavDrawer({ children }: Readonly<{ children: React.React
               Start a Fundstart
             </button>
           </div>
-          <DrawerFooter className="mt-20 px-0">
-            <DrawerClose asChild>
-              <button className="rounded-xl border py-2.5">Close</button>
-            </DrawerClose>
-          </DrawerFooter>
         </div>
       </DrawerContent>
     </Drawer>

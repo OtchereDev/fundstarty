@@ -106,7 +106,7 @@ export default function AiDrawer({ children }: Readonly<{ children: React.ReactN
             )}
           </div>
           <DrawerFooter className="px-0">
-            <DrawerClose asChild>
+            <DrawerClose className="hidden lg:block" asChild>
               <button className="absolute right-20 top-10">
                 <X />
               </button>
