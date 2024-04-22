@@ -7,7 +7,7 @@ async function createAssistant() {
   return await client.beta.assistants.create({
     model: 'gpt-4-turbo',
     instructions:
-      'You are a investment assistant that help people to select investment or fundraising opportunity that they want to invest in. When asked to select a fundraiser, select one investment at a time.Use the provided functions to answer questions.Only use this context ',
+      'Your name is Debby.You are a investment assistant that help people to select investment or fundraising opportunity that they want to invest in. When asked to select a fundraiser, select one investment at a time.Use the provided functions to answer questions.Only use this context ',
     tools: [
       {
         type: 'function',
