@@ -1,10 +1,10 @@
 import cookie from 'cookie'
 import dayjs from 'dayjs'
 import { GetServerSideProps } from 'next'
-import { AuthNService } from 'pangea-node-sdk'
+import { AuthNService, PangeaConfig } from 'pangea-node-sdk'
 import { useState } from 'react'
 
-import pangea, { AUTHN_TOKEN } from '@/constants/pangea'
+import { AUTHN_TOKEN } from '@/constants/pangea'
 import { getJWTPayload } from '@/lib/decodeJwt'
 import { prisma } from '@/lib/prismaClient'
 import { FundInvestment, Fundraiser, Transaction, Wallet } from '@prisma/client'
@@ -256,6 +256,9 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
         permanent: false,
       },
     }
+
+  const pangea = new PangeaConfig({ domain: process.env.NEXT_PUBLIC_PANGEA_DOMAIN })
+
   const payload = getJWTPayload(fundstartAuth)
   const auth = new AuthNService(AUTHN_TOKEN, pangea)
 
