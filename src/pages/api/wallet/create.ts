@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { RedactService, VaultService } from 'pangea-node-sdk'
+import { AuditService, RedactService, VaultService } from 'pangea-node-sdk'
 import { v4 as uuid } from 'uuid'
 
-import pangea, { SecureAudut } from '@/constants/pangea'
+import pangea from '@/constants/pangea'
 import { CardRegex, NumberStringRegex } from '@/constants/regex'
 import { getBearerToken, validateToken } from '@/lib/auth'
 import { getUserEmail } from '@/lib/decodeJwt'
@@ -12,6 +12,7 @@ export default async function WalletCreate(req: NextApiRequest, res: NextApiResp
   if (req.method === 'POST') {
     const token = getBearerToken(req)
     if (!(await validateToken(token))) return res.status(400).json({ message: 'Unauthenticated' })
+    const SecureAudut = new AuditService(process.env.NEXT_PANGEA_SECURE_AUDIT as string, pangea)
 
     const body = req.body
     const error: string[] = []

@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { AuthN, AuthNService } from 'pangea-node-sdk'
+import { AuditService, AuthN, AuthNService } from 'pangea-node-sdk'
 
-import pangea, { AUTHN_TOKEN, SecureAudut } from '@/constants/pangea'
+import pangea, { AUTHN_TOKEN } from '@/constants/pangea'
 import { prisma } from '@/lib/prismaClient'
 
 export default async function Login(req: NextApiRequest, res: NextApiResponse) {
@@ -13,6 +13,7 @@ export default async function Login(req: NextApiRequest, res: NextApiResponse) {
     }
 
     const auth = new AuthNService(AUTHN_TOKEN, pangea)
+    const SecureAudut = new AuditService(process.env.NEXT_PANGEA_SECURE_AUDIT as string, pangea)
 
     const codeUpdate = await auth.flow.update({
       flow_id: data.token,

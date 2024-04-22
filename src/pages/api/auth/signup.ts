@@ -1,12 +1,17 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { AuthN, AuthNService } from 'pangea-node-sdk'
+import { AuditService, AuthN, AuthNService } from 'pangea-node-sdk'
 
-import PangeaConfig, { AUTHN_TOKEN, SecureAudut } from '@/constants/pangea'
+import PangeaConfig, { AUTHN_TOKEN } from '@/constants/pangea'
 import { EmailRegex, PasswordRegex } from '@/constants/regex'
 import { prisma } from '@/lib/prismaClient'
 
 export default async function Signup(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
+    const SecureAudut = new AuditService(
+      process.env.NEXT_PANGEA_SECURE_AUDIT as string,
+      PangeaConfig
+    )
+
     const data = req.body
     const errors: string[] = []
     if (!data.firstName) {

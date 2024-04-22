@@ -1,8 +1,8 @@
 import Joi from 'joi'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { AuthNService } from 'pangea-node-sdk'
+import { AuditService, AuthNService } from 'pangea-node-sdk'
 
-import pangea, { AUTHN_TOKEN, SecureAudut } from '@/constants/pangea'
+import pangea, { AUTHN_TOKEN } from '@/constants/pangea'
 import { getBearerToken, validToken } from '@/lib/auth'
 import { getJWTPayload } from '@/lib/decodeJwt'
 
@@ -17,6 +17,7 @@ export default async function ChangePassword(req: NextApiRequest, res: NextApiRe
     if (!(await validToken(req))) return res.status(400).json({ message: 'Unauthorized' })
     const payload = getJWTPayload(getBearerToken(req))
     const auth = new AuthNService(AUTHN_TOKEN, pangea)
+    const SecureAudut = new AuditService(process.env.NEXT_PANGEA_SECURE_AUDIT as string, pangea)
 
     const body = req.body
     const { value, error } = joiScheme.validate(body)

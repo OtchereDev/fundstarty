@@ -2,10 +2,11 @@ import { v2 as cloudinary } from 'cloudinary'
 import joi from 'joi'
 import { NextApiRequest, NextApiResponse } from 'next'
 
-import { SecureAudut } from '@/constants/pangea'
+import pangea from '@/constants/pangea'
 import { getBearerToken, validateToken } from '@/lib/auth'
 import { getUserEmail } from '@/lib/decodeJwt'
 import { prisma } from '@/lib/prismaClient'
+import { AuditService } from 'pangea-node-sdk'
 
 cloudinary.config({
   cloud_name: 'otcheredev',
@@ -90,6 +91,8 @@ export default async function Fundraisers(req: NextApiRequest, res: NextApiRespo
         organizer: { connect: { id: user?.id as string } },
       },
     })
+
+    const SecureAudut = new AuditService(process.env.NEXT_PANGEA_SECURE_AUDIT as string, pangea)
 
     await SecureAudut.log({
       action: 'fundraiser_create',

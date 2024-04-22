@@ -1,12 +1,15 @@
-import { SecureAudut } from '@/constants/pangea'
+import pangea from '@/constants/pangea'
 import { prisma } from '@/lib/prismaClient'
 
 import { NextApiRequest, NextApiResponse } from 'next'
+import { AuditService } from 'pangea-node-sdk'
 import { default as Stripe } from 'stripe'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
   if (req.method === 'POST') {
     const sig = req.headers['stripe-signature']!
+
+    const SecureAudut = new AuditService(process.env.NEXT_PANGEA_SECURE_AUDIT as string, pangea)
 
     if (!sig)
       return res.status(400).json({
