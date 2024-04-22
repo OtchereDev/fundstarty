@@ -22,9 +22,37 @@ FundStart is a comprehensive investment platform that connects entrepreneurs wit
 - PostgreSQL for data storage
 - Pangea.cloud for secure authentication, data reduction, embargo enforcement, and more.
 
+## Requirement
+
+1. Nodejs version >= 16
+2. Environments variable in .env file, sample configuration can be seen in .env.template and below.
+
+## Environments Variables
+
+```
+NEXT_PUBLIC_PANGEA_DOMAIN=
+NEXT_AUTHN_TOKEN=
+NEXT_PUBLIC_AUTHN_CLIENT_TOKEN=
+NEXT_PUBLIC_AUTHN_HOSTED_LOGIN_URL=
+NEXT_PUBLIC_REDIRECT_URL=
+NEXT_PANGEA_REDACT_TOKEN=
+NEXT_PANGEA_VAULT_TOKEN=
+NEXT_PANGEA_FileIntel=
+NEXT_PANGEA_UserIntel=
+NEXT_PANGEA_SECURE_AUDIT=
+
+
+DATABASE_URL=
+
+STRIPE_PAYSTACK_KEY=
+STRIPE_WEBHOOK=
+
+OPENAI_API_KEY=
+```
+
 ## Getting Started
 
-1. Clone the repository: `git clone <repository-url>`
+1. Clone the repository: `git clone https://github.com/OtchereDev/fundstarty.git`
 2. Install dependencies: `npm install`
 3. Start the development server: `npm run dev`
 

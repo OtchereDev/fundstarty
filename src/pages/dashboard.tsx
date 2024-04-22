@@ -31,7 +31,7 @@ export default function Dashbaord({
   investedPercentage,
   transactions,
   otherInvestments,
-}: {
+}: Readonly<{
   fundstartAuth: string
   profile: any
   wallet: Wallet
@@ -43,7 +43,7 @@ export default function Dashbaord({
   investedPercentage: number
   transactions: Transaction[]
   otherInvestments: (Fundraiser & { investments: FundInvestment[] })[]
-}) {
+}>) {
   const [userCard, setUserCard] = useState(wallet)
   return (
     <Analystics title={'Dashboard'} activeLink={'Dashboard'}>
