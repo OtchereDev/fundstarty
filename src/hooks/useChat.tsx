@@ -8,11 +8,12 @@ const useChat = ({ authKey, open }: { authKey: string; open: boolean }) => {
   const [threadId, setThreadId] = useState('')
 
   const initializeChat = async () => {
+    const auth = authKey.split(',')[0]
     const request = await fetch('/api/chat/init', {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
-        authorization: `Bearer ${authKey}`,
+        authorization: `Bearer ${auth}`,
       },
     })
 
@@ -44,11 +45,13 @@ const useChat = ({ authKey, open }: { authKey: string; open: boolean }) => {
     try {
       const newMessages = [{ content: message, role: 'user' }, ...messages]
       setMessages(newMessages)
+      const auth = authKey.split(',')[0]
       const request = await fetch(`/api/chat/add`, {
         method: 'POST',
         body: JSON.stringify({ message, threadId }),
         headers: {
           'content-type': 'application/json',
+          authorization: `Bearer ${auth}`,
         },
       })
       if (request.ok) {

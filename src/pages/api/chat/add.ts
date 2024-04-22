@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
-// import { getBearerToken, validateToken } from '@/lib/auth'
+import { getBearerToken, validateToken } from '@/lib/auth'
 import { addMessage } from '@/lib/openai'
 import Joi from 'joi'
 
@@ -11,8 +11,8 @@ const schema = Joi.object({
 
 export default async function Index(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    // const token = getBearerToken(req)
-    // if (!(await validateToken(token))) return res.status(400).json({ message: 'Unauthenticated' })
+    const token = getBearerToken(req)
+    if (!(await validateToken(token))) return res.status(400).json({ message: 'Unauthenticated' })
 
     const { error, value } = schema.validate(req.body)
 
