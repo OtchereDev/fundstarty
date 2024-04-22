@@ -8,7 +8,7 @@ import LineChart from '@/components/dashboard/LineChart'
 import Analystics from '@/components/layouts/analytics'
 import { Plus } from 'lucide-react'
 
-export default function Dashbaord() {
+export default function Dashbaord({ fundstartAuth }: { fundstartAuth: string }) {
   return (
     <Analystics title={'Dashboard'} activeLink={'Dashboard'}>
       <main className=" flex-1  lg:grid lg:grid-cols-[70%,30%] lg:gap-5">
@@ -136,7 +136,7 @@ export default function Dashbaord() {
             <div className="   border-b pb-14 lg:p-5 lg:pb-14">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-bold">My Cards</h2>
-                <AddWalletDialog>
+                <AddWalletDialog authKey={fundstartAuth}>
                   <button className="flex gap-1 font-medium">
                     <Plus className="w-4" />
                     Add Card

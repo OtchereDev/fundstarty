@@ -19,7 +19,7 @@ export default async function WalletCreate(req: NextApiRequest, res: NextApiResp
     if (!CardRegex.test(body.cardNumber)) {
       error.push('Provide a valid card number')
     }
-    if (!NumberStringRegex.test(body.cvv) || body.cvv?.length < 4 || body.cvv?.length > 5) {
+    if (!NumberStringRegex.test(body.cvv) || body.cvv?.length < 3 || body.cvv?.length > 4) {
       error.push('Provide a valid cvv')
     }
     if (/^(0[1-9]|1[0-2])\/\d{4}$/.test(body.expiryDate)) {
@@ -62,16 +62,19 @@ export default async function WalletCreate(req: NextApiRequest, res: NextApiResp
       await SecureAudut.log({
         action: 'wallet',
         target: 'wallet',
+        actor: user?.id ?? 'user',
         status: 'success',
         message: `Successfully created for wallet ${wallet.id} by ${wallet.userId}`,
       })
       return res.json({
         message: 'Successfully added card',
+        wallet,
       })
     } else {
       await SecureAudut.log({
         action: 'wallet',
         target: 'wallet',
+        actor: user?.id ?? 'user',
         status: 'error',
         message: `Error creating wallet ${user?.id} by: ${error}`,
       })

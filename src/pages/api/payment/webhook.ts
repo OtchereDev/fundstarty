@@ -44,6 +44,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
         await SecureAudut.log({
           action: 'payment_intent.succeeded',
           target: 'payment',
+          actor: 'payment_intent',
           status: 'success',
           message: `Successfully investment for fundraiser ${intent.fundraiserId} by ${intent.userId}`,
         })
@@ -55,6 +56,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
       await SecureAudut.log({
         action: 'payment_intent.succeeded',
         target: 'payment',
+        actor: 'payment_intent',
         status: 'error',
         message: `Error investment for fundraiser ${err.message}`,
       })

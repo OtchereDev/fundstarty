@@ -18,6 +18,7 @@ export default async function DeletCategory(req: NextApiRequest, res: NextApiRes
     await SecureAudut.log({
       action: 'category',
       target: req.query.id as string,
+      actor: 'admin',
       status: 'success',
       message: `Successfully deleted category ${id}`,
     })

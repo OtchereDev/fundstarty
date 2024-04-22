@@ -14,6 +14,7 @@ export default async function CreateCategory(req: NextApiRequest, res: NextApiRe
     await SecureAudut.log({
       action: 'category',
       target: category.id,
+      actor: 'admin',
       status: 'success',
       message: `Successfully created category ${category.id}`,
     })

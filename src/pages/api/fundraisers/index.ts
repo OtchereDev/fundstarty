@@ -94,6 +94,7 @@ export default async function Fundraisers(req: NextApiRequest, res: NextApiRespo
     await SecureAudut.log({
       action: 'fundraiser_create',
       target: 'fundraiser',
+      actor: user?.email ?? 'user',
       status: 'success',
       message: `Successfully created fundraiser ${f.id} by ${user?.email}`,
     })
