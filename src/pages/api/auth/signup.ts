@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { AuditService, AuthN, AuthNService } from 'pangea-node-sdk'
+import { AuditService, AuthN, AuthNService, EmbargoService, IPIntelService } from 'pangea-node-sdk'
+import requestIp from 'request-ip'
 
-import PangeaConfig, { AUTHN_TOKEN } from '@/constants/pangea'
+import { AUTHN_TOKEN, default as PangeaConfig, default as pangea } from '@/constants/pangea'
 import { EmailRegex, PasswordRegex } from '@/constants/regex'
 import { prisma } from '@/lib/prismaClient'
 
@@ -11,6 +12,19 @@ export default async function Signup(req: NextApiRequest, res: NextApiResponse) 
       process.env.NEXT_PANGEA_SECURE_AUDIT as string,
       PangeaConfig
     )
+
+    const userIp = requestIp.getClientIp(req) ?? ''
+    const IpIntel = new IPIntelService(process.env.NEXT_PANGEA_IP_Service as string, pangea)
+    const reputation = await IpIntel.reputation(userIp)
+    if (reputation.result.data.score > 20) {
+      return res.status(503).json({ message: 'Fundstart is not available in your location' })
+    }
+
+    const embargo = new EmbargoService(process.env.NEXT_PANGEA_EMBARGO_Service as string, pangea)
+    const embargoRes = await embargo.ipCheck(userIp)
+    if (embargoRes.result.sanctions.length > 0) {
+      return res.status(503).json({ message: 'Fundstart is not available in your location' })
+    }
 
     const data = req.body
     const errors: string[] = []

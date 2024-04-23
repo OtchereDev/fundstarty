@@ -1,12 +1,13 @@
 import { v2 as cloudinary } from 'cloudinary'
 import joi from 'joi'
 import { NextApiRequest, NextApiResponse } from 'next'
+import requestIp from 'request-ip'
 
 import pangea from '@/constants/pangea'
 import { getBearerToken, validateToken } from '@/lib/auth'
 import { getUserEmail } from '@/lib/decodeJwt'
 import { prisma } from '@/lib/prismaClient'
-import { AuditService } from 'pangea-node-sdk'
+import { AuditService, EmbargoService, IPIntelService } from 'pangea-node-sdk'
 
 cloudinary.config({
   cloud_name: 'otcheredev',
@@ -71,6 +72,19 @@ export default async function Fundraisers(req: NextApiRequest, res: NextApiRespo
     if (error !== undefined) {
       const errors = error.details.map((e) => e.message)
       return res.status(400).json({ message: 'Validation error', errors })
+    }
+
+    const userIp = requestIp.getClientIp(req) ?? ''
+    const IpIntel = new IPIntelService(process.env.NEXT_PANGEA_IP_Service as string, pangea)
+    const reputation = await IpIntel.reputation(userIp)
+    if (reputation.result.data.score > 20) {
+      return res.status(503).json({ message: 'Fundstart is not available in your location' })
+    }
+
+    const embargo = new EmbargoService(process.env.NEXT_PANGEA_EMBARGO_Service as string, pangea)
+    const embargoRes = await embargo.ipCheck(userIp)
+    if (embargoRes.result.sanctions.length > 0) {
+      return res.status(503).json({ message: 'Fundstart is not available in your location' })
     }
 
     const email = getUserEmail(req)

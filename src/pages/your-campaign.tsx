@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/select'
 import { getJWTPayload } from '@/lib/decodeJwt'
 import { Category, FundInvestment, Fundraiser } from '@prisma/client'
+import Link from 'next/link'
 
 interface IResponse {
   popular: (Fundraiser & {
@@ -43,9 +44,11 @@ export default function YourCampaign({ popular, fundraisers, category }: Readonl
             <span className="text-[#196875]">{fundraisers.length} Active </span> Campaigns
           </h3>
 
-          <button className="flex items-center gap-3 rounded-lg bg-[#541975] px-4 py-2 text-white">
-            <CirclePlus /> <span className="hidden lg:inline-block">Start Campaign</span>
-          </button>
+          <Link href="/create">
+            <button className="flex items-center gap-3 rounded-lg bg-[#541975] px-4 py-2 text-white">
+              <CirclePlus /> <span className="hidden lg:inline-block">Start Campaign</span>
+            </button>
+          </Link>
         </div>
 
         <div className="mt-10 flex flex-wrap justify-center gap-y-10 lg:mt-12 lg:justify-between lg:gap-y-16">

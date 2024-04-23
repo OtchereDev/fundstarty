@@ -208,12 +208,14 @@ export default function Dashbaord({
                       <div>
                         <h3 className="line-clamp-1 font-semibold">{invest.title}</h3>
                         <p className="text-sm text-gray-500">
-                          Target: £{invest.amountRaising.toString()}
+                          Target: £{formatMoney(parseFloat(invest.amountRaising.toString()))}
                         </p>
                       </div>
                     </div>
                     <div className="mt-3">
-                      <p className="font-semibold">Raised: £{calculateRaised(invest)}</p>
+                      <p className="font-semibold">
+                        Raised: £{formatMoney(calculateRaised(invest))}
+                      </p>
                       <div className="mt-2 w-full">
                         <div className="relative h-1 w-full overflow-hidden rounded-3xl bg-gray-200">
                           <div
@@ -256,7 +258,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
       },
     }
 
-  console.log(process.env)
   const pangea = new PangeaConfig({ domain: process.env.NEXT_PUBLIC_PANGEA_DOMAIN })
 
   const payload = getJWTPayload(fundstartAuth)

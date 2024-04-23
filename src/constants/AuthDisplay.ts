@@ -15,4 +15,8 @@ export const AuthMessages: Record<string, { title: string; message: string }> = 
     title: 'Keep your account safe',
     message: 'Your safety is our priority',
   },
+  category: {
+    title: 'Embark on your fundraising journey with us! 🚀',
+    message: "We're here to guide you every step of the way.",
+  },
 }

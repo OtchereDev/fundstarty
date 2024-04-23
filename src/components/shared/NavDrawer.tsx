@@ -79,9 +79,11 @@ export default function NavDrawer({ children }: Readonly<{ children: React.React
           </div>
           <hr className="my-2" />
           <div className="mt-10">
-            <button className="w-full rounded-md bg-[#541975] px-2 py-3 font-semibold text-gray-50 shadow-md outline-none">
-              Start a Fundstart
-            </button>
+            <Link href="/create">
+              <button className="w-full rounded-md bg-[#541975] px-2 py-3 font-semibold text-gray-50 shadow-md outline-none">
+                Start Fundstart
+              </button>
+            </Link>
           </div>
         </div>
       </DrawerContent>

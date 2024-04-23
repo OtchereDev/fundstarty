@@ -16,7 +16,7 @@ export default function CampaignCard({
   }
 }>) {
   return (
-    <div className="relative w-full overflow-hidden rounded-lg border lg:min-w-[327px] lg:max-w-[327px] lg:flex-1 lg:flex-shrink-0">
+    <div className="relative w-full overflow-hidden rounded-lg border bg-white lg:min-w-[327px] lg:max-w-[327px] lg:flex-1 lg:flex-shrink-0">
       <Link className="block" href={`/fundraisers/${fundraiser.id}`}>
         <div className="h-[138px]">
           <img src={fundraiser?.image ?? ''} alt="banner" className="h-full w-full object-cover" />

@@ -1,14 +1,16 @@
 import { AuthMessages } from '@/constants/AuthDisplay'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import { Logo } from '../assets/icons'
 
-export default function Sushi({ children }: Readonly<{ children: React.ReactNode }>) {
-  const { pathname } = useRouter()
-  const message = AuthMessages[pathname]
+export default function Sushi({
+  children,
+  stage,
+}: Readonly<{ children: React.ReactNode; stage: string }>) {
+  const message = AuthMessages[stage]
+
   return (
     <main className="w-full overflow-y-hidden bg-white p-6 text-[#333] lg:grid lg:h-screen lg:grid-cols-[34%,66%] lg:bg-[#f3f4f5] lg:p-0">
-      <div className=" lg:flex-shrink-0 lg:bg-[#f3f4f5] lg:pl-16 lg:pt-16">
+      <div className=" lg:max-w-[80%] lg:flex-shrink-0 lg:bg-[#f3f4f5] lg:pl-16 lg:pt-16">
         <Link href="/">
           <Logo />
         </Link>

@@ -12,6 +12,7 @@ import {
 import { prisma } from '@/lib/prismaClient'
 import { Category, FundInvestment, Fundraiser as IFundraiser, User } from '@prisma/client'
 import { GetServerSideProps } from 'next'
+import Link from 'next/link'
 
 export default function Index({
   fundraisers,
@@ -65,9 +66,11 @@ export default function Index({
           ))}
         </section>
 
-        <button className="mt-10 w-full rounded-lg bg-[#541975] py-2.5 font-semibold text-white lg:hidden">
-          Start a Fundstart
-        </button>
+        <Link href={'/create'}>
+          <button className="mt-10 w-full rounded-lg bg-[#541975] py-2.5 font-semibold text-white lg:hidden">
+            Start Fundstart
+          </button>
+        </Link>
       </section>
     </Analystics>
   )

@@ -20,6 +20,10 @@ export default async function Index(req: NextApiRequest, res: NextApiResponse) {
     const fileIntel = new FileIntelService(process.env.NEXT_PANGEA_FileIntel as string, pangea)
     const result = await fileIntel.hashReputation(value.file, 'md5')
 
+    if (result.result.data.score > 20) {
+      return res.status(400).json({ message: 'File is corrupted' })
+    }
+
     return res.json({ response: JSON.parse(result.toJSON()) })
   } else {
     return res.status(403).json({ message: 'Invalid method' })
