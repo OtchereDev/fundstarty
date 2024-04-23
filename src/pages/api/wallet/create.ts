@@ -5,7 +5,7 @@ import { v4 as uuid } from 'uuid'
 import pangea from '@/constants/pangea'
 import { CardRegex, NumberStringRegex } from '@/constants/regex'
 import { getBearerToken, validateToken } from '@/lib/auth'
-import { getUserEmail } from '@/lib/decodeJwt'
+import { getJWTPayload } from '@/lib/decodeJwt'
 import { prisma } from '@/lib/prismaClient'
 
 export default async function WalletCreate(req: NextApiRequest, res: NextApiResponse) {
@@ -30,7 +30,9 @@ export default async function WalletCreate(req: NextApiRequest, res: NextApiResp
       error.push('provide card holder name')
     }
 
-    const email = getUserEmail(req)
+    const payload = getJWTPayload(getBearerToken(req))
+    const email = payload.email as string
+    const puid = payload.sub as string
     const user = await prisma.user.findFirst({ where: { email } })
 
     if (error.length == 0) {
@@ -54,7 +56,15 @@ export default async function WalletCreate(req: NextApiRequest, res: NextApiResp
       const wallet = await prisma.wallet.create({
         data: {
           user: {
-            connect: { id: user?.id as string },
+            connectOrCreate: {
+              where: {
+                email,
+              },
+              create: {
+                email: email,
+                pangeaUserId: puid as string,
+              },
+            },
           },
           ...card,
         },

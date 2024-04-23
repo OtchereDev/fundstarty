@@ -5,7 +5,7 @@ import requestIp from 'request-ip'
 
 import pangea from '@/constants/pangea'
 import { getBearerToken, validateToken } from '@/lib/auth'
-import { getUserEmail } from '@/lib/decodeJwt'
+import { getJWTPayload } from '@/lib/decodeJwt'
 import { prisma } from '@/lib/prismaClient'
 import { AuditService, EmbargoService, IPIntelService } from 'pangea-node-sdk'
 
@@ -87,7 +87,9 @@ export default async function Fundraisers(req: NextApiRequest, res: NextApiRespo
       return res.status(503).json({ message: 'Fundstart is not available in your location' })
     }
 
-    const email = getUserEmail(req)
+    const payload = getJWTPayload(getBearerToken(req))
+    const email = payload.email as string 
+    const puid = payload.sub as string
     const user = await prisma.user.findFirst({ where: { email } })
 
     const imgResult = await cloudinary.uploader.upload(value.image, {
@@ -102,7 +104,17 @@ export default async function Fundraisers(req: NextApiRequest, res: NextApiRespo
         ...value,
         image: imgResult.url,
         category: { connect: { id: catId } },
-        organizer: { connect: { id: user?.id as string } },
+        organizer: { 
+          connectOrCreate:{
+            where: {
+              email,
+            },
+            create: {
+              email: email,
+              pangeaUserId: puid as string,
+            },
+          }
+        },
       },
     })
 
