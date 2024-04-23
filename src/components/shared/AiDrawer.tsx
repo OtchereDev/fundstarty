@@ -52,7 +52,9 @@ export default function AiDrawer({ children }: Readonly<{ children: React.ReactN
       <DrawerContent>
         <div className="mx-auto w-full max-w-[1280px] px-5">
           <DrawerHeader>
-            <DrawerTitle>Debby (Investment assistant AI)</DrawerTitle>
+            <DrawerTitle className="flex items-center gap-2">
+              Debby (Investment assistant AI) <Bot />
+            </DrawerTitle>
             <DrawerDescription>
               Here to make your investment journey on Fundstart easy
             </DrawerDescription>

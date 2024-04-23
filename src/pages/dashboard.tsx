@@ -267,12 +267,14 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const data = await auth.user.profile.getProfile({
     email,
   })
+
+  const user = await prisma.user.findFirst({
+    where: { email: { contains: email, mode: 'insensitive' } },
+    select: { id: true },
+  })
+
   const wallet = await prisma.wallet.findFirst({
-    where: {
-      user: {
-        email,
-      },
-    },
+    where: { userId: user?.id },
     orderBy: { createdAt: 'desc' },
   })
 

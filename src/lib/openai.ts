@@ -4,26 +4,28 @@ import { prisma } from './prismaClient'
 const client = new OpenAI({})
 
 async function createAssistant() {
-  return await client.beta.assistants.create({
-    model: 'gpt-4-turbo',
-    instructions:
-      'Your name is Debby. You are a investment assistant that help people to select investment or fundraising opportunity that they want to invest in. When asked to select a fundraiser, select one investment at a time.Use the provided functions to answer questions.Only use this context ',
-    tools: [
-      {
-        type: 'function',
-        function: {
-          name: 'getListInvestments',
-          description:
-            'Get the list of investment or fundraising that are available for invest to invest in',
-          parameters: {
-            type: 'object',
-            properties: {},
-            required: [],
-          },
-        },
-      },
-    ],
-  })
+  // NOTE: OpenAI create the assistant and  stores it so make the app performant we can retreive the assisant instead of creating everytime
+  //   await client.beta.assistants.create({
+  //    model: 'gpt-4-turbo',
+  //    instructions:
+  //      'Your name is Debby. You are a investment assistant that help people to select investment or fundraising opportunity that they want to invest in. When asked to select a fundraiser, select one investment at a time.Use the provided functions to answer questions.Only use this context ',
+  //    tools: [
+  //      {
+  //        type: 'function',
+  //        function: {
+  //          name: 'getListInvestments',
+  //          description:
+  //            'Get the list of investment or fundraising that are available for invest to invest in',
+  //          parameters: {
+  //            type: 'object',
+  //            properties: {},
+  //            required: [],
+  //          },
+  //        },
+  //      },
+  //    ],
+  //  })
+  return await client.beta.assistants.retrieve('asst_yzogfykIFNOtXWYCiHg9UG5M')
 }
 
 async function handleRunStatus(run: any, threadId: string) {
