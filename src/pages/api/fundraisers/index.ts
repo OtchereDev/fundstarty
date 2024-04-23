@@ -24,6 +24,14 @@ const fundraiserSchema = joi.object({
   expiryDate: joi.string().isoDate(),
 })
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '10mb',
+    },
+  },
+}
+
 export default async function Fundraisers(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
     const search = req.query.search
@@ -88,7 +96,7 @@ export default async function Fundraisers(req: NextApiRequest, res: NextApiRespo
     }
 
     const payload = getJWTPayload(getBearerToken(req))
-    const email = payload.email as string 
+    const email = payload.email as string
     const puid = payload.sub as string
     const user = await prisma.user.findFirst({ where: { email } })
 
@@ -104,8 +112,8 @@ export default async function Fundraisers(req: NextApiRequest, res: NextApiRespo
         ...value,
         image: imgResult.url,
         category: { connect: { id: catId } },
-        organizer: { 
-          connectOrCreate:{
+        organizer: {
+          connectOrCreate: {
             where: {
               email,
             },
@@ -113,7 +121,7 @@ export default async function Fundraisers(req: NextApiRequest, res: NextApiRespo
               email: email,
               pangeaUserId: puid as string,
             },
-          }
+          },
         },
       },
     })
