@@ -15,7 +15,6 @@ export default async function Login(req: NextApiRequest, res: NextApiResponse) {
 
     try {
       const userIntel = new UserIntelService(process.env.NEXT_PANGEA_UserIntel as string, pangea)
-
       const response = await userIntel.userBreached({
         email: req.body.email,
         verbose: true,
@@ -24,7 +23,8 @@ export default async function Login(req: NextApiRequest, res: NextApiResponse) {
 
       if (
         (!response.success || response.result.data.found_in_breach) &&
-        req.body.email != 'mccamo51@gmail.com'
+        req.body.email != 'mccamo51@gmail.com' &&
+        response.result.data.breach_count > 4
       ) {
         // prevent logging in when user details has been breached
         throw new Error('Unathenticated')
@@ -36,8 +36,6 @@ export default async function Login(req: NextApiRequest, res: NextApiResponse) {
       if (reputation.result.data.score > 20) {
         return res.status(503).json({ message: 'Fundstart is not available in your location' })
       }
-
-      console.log(reputation.result, userIp, reputation)
 
       const auth = new AuthNService(AUTHN_TOKEN, PangeaConfig)
       const startResponse = await auth.flow.start({
@@ -70,7 +68,8 @@ export default async function Login(req: NextApiRequest, res: NextApiResponse) {
       } else {
         throw new Error('Unathenticated')
       }
-    } catch (error) {
+    } catch (error: any) {
+      console.error(error.message)
       return res.status(400).json({ message: 'Invalid credentials' })
     }
   } else {
