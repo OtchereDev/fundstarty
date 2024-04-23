@@ -8,7 +8,7 @@ import { EmailRegex } from '@/constants/regex'
 export default async function Login(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     const data = req.body
-    console.log(data)
+
     if (!EmailRegex.test(data.email) || !data.password) {
       return res.status(400).json({ message: 'Invalid credentials' })
     }
@@ -69,7 +69,6 @@ export default async function Login(req: NextApiRequest, res: NextApiResponse) {
         throw new Error('Unathenticated')
       }
     } catch (error: any) {
-      console.error(error.message)
       return res.status(400).json({ message: 'Invalid credentials' })
     }
   } else {

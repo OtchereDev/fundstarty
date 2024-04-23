@@ -22,7 +22,7 @@ export default async function Signup(req: NextApiRequest, res: NextApiResponse) 
 
     const embargo = new EmbargoService(process.env.NEXT_PANGEA_EMBARGO_Service as string, pangea)
     const embargoRes = await embargo.ipCheck(userIp)
-    if (embargoRes.result.sanctions.length > 0) {
+    if (embargoRes.result.sanctions?.length > 0) {
       return res.status(503).json({ message: 'Fundstart is not available in your location' })
     }
 
