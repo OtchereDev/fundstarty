@@ -58,6 +58,10 @@ OPENAI_API_KEY=
 2. Install dependencies: `npm install`
 3. Start the development server: `npm run dev`
 
+## Pangea Service Implementation Location
+
+All (98%) of the implementation of pangea services were on the API which can be found in the **[src/pages/api](src/pages/api)** directory. Except for the implementation of the single sign on using @pangeacyber/react-auth which can be found in the **[src/pages/\_app.tsx](src/pages/_app.tsx)** file
+
 ## Architecture
 
 ![alt text](image.png)
