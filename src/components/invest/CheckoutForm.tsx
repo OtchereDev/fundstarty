@@ -149,9 +149,7 @@ const CheckoutForm = ({
           disabled={processing || disabled || succeded}
           id="submit"
         >
-          <span id="button-text">
-            {processing ? <div className="spinner" id="spinner"></div> : 'Pay now'}
-          </span>
+          <span id="button-text">{processing ? 'Loading...' : 'Pay now'}</span>
         </button>
         {error && (
           <div className="card-error text-red-500" role="alert">
