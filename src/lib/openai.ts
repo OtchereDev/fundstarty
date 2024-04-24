@@ -46,7 +46,7 @@ async function handleRequiresAction(run: any, threadId: string): Promise<any> {
     run.required_action.submit_tool_outputs.tool_calls
   ) {
     const fundraisers = await prisma.fundraiser.findMany({
-      include: { category: true, organizer: true, investments: true },
+      include: { category: true },
     })
 
     const toolOutputs = [
